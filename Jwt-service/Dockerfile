@@ -1,0 +1,8 @@
+FROM eclipse-temurin:17-jre-alpine
+ARG SERVER_NAME
+
+ENV SERVER_NAME_ENV=${SERVER_NAME}
+
+COPY target/${SERVER_NAME}-0.0.1-SNAPSHOT.jar .
+
+ENTRYPOINT java -jar ${SERVER_NAME_ENV}-0.0.1-SNAPSHOT.jar
