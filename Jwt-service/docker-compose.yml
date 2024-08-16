@@ -1,0 +1,35 @@
+version: '3.8'
+name: codebase
+
+services:
+  codebase:
+    container_name: codebase
+    image: codebase
+    restart: unless-stopped
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        SERVER_NAME: Jwt-service
+
+    ports:
+      - 8000:8000
+    networks:
+      - betflix-network
+  mysql:
+    image: mysql:5.7.40
+    container_name: mysql
+    restart: unless-stopped
+    environment:
+      - MYSQL_USER=quangkhanh
+      - MYSQL_PASSWORD=2882004
+      - MYSQL_ROOT_PASSWORD=quangkhanh
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    networks:
+      - betflix-network
+networks:
+  betflix-network:
+    external: true
