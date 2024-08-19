@@ -1,6 +1,7 @@
 package com.security.Jwt_service.entity.user;
 
 import com.security.Jwt_service.entity.Base;
+import com.security.Jwt_service.entity.chat.Message;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -41,5 +43,8 @@ public class User extends Base {
             inverseJoinColumns = @JoinColumn(name = "team_id", referencedColumnName = "id")
     )
     private Set<Team> teams;
+    @OneToMany(mappedBy = "user")
+    private List<Message> messages;
+
 
 }

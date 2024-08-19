@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -48,6 +50,10 @@ public class SecurityConfig {
 
     }
     @Bean
+    public HttpSessionEventPublisher httpSessionEventPublisher() {
+        return new HttpSessionEventPublisher();
+    }
+    @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
@@ -58,12 +64,14 @@ public class SecurityConfig {
                     .cors(AbstractHttpConfigurer::disable)
                     .authorizeHttpRequests(
                             authorize-> {
-                                authorize.requestMatchers("/auth/**").permitAll()
+                                authorize.requestMatchers("/auth/**","/chat/**").permitAll()
                                         .anyRequest().authenticated();
                             }
                     )
                     .exceptionHandling(exception-> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
-                    .sessionManagement(manager-> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                    .sessionManagement(manager-> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                            .maximumSessions(1)
+                    )
                     .authenticationProvider(provider()).addFilterBefore(preFilter, UsernamePasswordAuthenticationFilter.class);
             return http.build();
     }
