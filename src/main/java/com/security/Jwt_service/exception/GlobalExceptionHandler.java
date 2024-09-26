@@ -63,7 +63,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 webRequest.getDescription(false));
         return new ResponseEntity<>(errorDetails,HttpStatus.UNAUTHORIZED);
     }
-
+    @ExceptionHandler(JwtValidateException.class)
+    public ResponseEntity<ErrorDetails> handleTokenValidateException(JwtValidateException exception, WebRequest webRequest){
+        ErrorDetails errorDetails= new ErrorDetails(new Date(), exception.getMessage(),
+                webRequest.getDescription(false));
+        return new ResponseEntity<>(errorDetails,HttpStatus.UNAUTHORIZED);
+    }
 
 
 

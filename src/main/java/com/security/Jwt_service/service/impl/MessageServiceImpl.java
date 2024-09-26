@@ -10,6 +10,7 @@ import com.security.Jwt_service.repository.RoomRepository;
 import com.security.Jwt_service.repository.UserRepository;
 import com.security.Jwt_service.service.MessageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 @Service

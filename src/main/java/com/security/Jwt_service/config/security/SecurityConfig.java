@@ -1,6 +1,7 @@
 package com.security.Jwt_service.config.security;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,6 +30,20 @@ public class SecurityConfig {
     private final UserDetailsService userDetailsService;
     private final AuthTokenFilter preFilter;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+
+    @Bean
+    public String b(){
+        return "a";
+    }
+    @Bean
+    public String c(){
+        return "b";
+    }
+
+    @Bean
+    public SimpleBean simpleBean(@Qualifier("b") String a){
+       return new SimpleBean(a);
+    }
 
     @Bean
     public WebMvcConfigurer corsConfigure(){
