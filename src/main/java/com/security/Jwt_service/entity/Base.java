@@ -17,11 +17,4 @@ public abstract class Base {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @CreatedDate
-    @Column(name = "create_at", nullable = false,updatable = false)
-    private Instant createdAt= Instant.now();
-    @LastModifiedDate
-    @Column(name = "updated_at", nullable = false)
-    private Instant updatedAt= Instant.now();
-
 }

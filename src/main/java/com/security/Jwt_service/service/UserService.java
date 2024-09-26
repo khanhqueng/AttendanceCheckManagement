@@ -7,5 +7,4 @@ public interface UserService {
     UserResponseDto createUser(UserCreateDto createDto);
     UserResponseDto getUserById(Long userId);
     UserResponseDto updateUser(Long userId, String email);
-    UserResponseDto addTeam(Long userId, String nameTeam);
 }

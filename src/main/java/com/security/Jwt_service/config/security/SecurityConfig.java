@@ -32,20 +32,6 @@ public class SecurityConfig {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     @Bean
-    public String b(){
-        return "a";
-    }
-    @Bean
-    public String c(){
-        return "b";
-    }
-
-    @Bean
-    public SimpleBean simpleBean(@Qualifier("b") String a){
-       return new SimpleBean(a);
-    }
-
-    @Bean
     public WebMvcConfigurer corsConfigure(){
         return new WebMvcConfigurer() {
             @Override

@@ -1,7 +1,7 @@
 package com.security.Jwt_service.entity.user;
 
 import com.security.Jwt_service.entity.Base;
-import com.security.Jwt_service.entity.chat.Message;
+import com.security.Jwt_service.entity.session.Question;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
@@ -22,29 +22,27 @@ import java.util.Set;
 public class User extends Base {
     @Column(name = "username", unique = true, nullable = false)
     private String username;
-    @Column(name = "name", nullable = false)
-    private String name;
-    @Column(name= "email", unique= true,nullable = false)
-    @Email
-    private String email;
+
     @Column(name = "password", nullable = false)
     private String password;
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(
-        name = "user_role",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
-    )
-    private Set<Role> roles;
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "user_team",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "team_id", referencedColumnName = "id")
-    )
-    private Set<Team> teams;
-    @OneToMany(mappedBy = "user")
-    private List<Message> messages;
 
+    @Column(name = "resetPassword_code")
+    private String resetPasswordCode;
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)
+    private Role role;
+
+    @OneToOne(mappedBy = "user")
+    private Student student;
+
+    @OneToOne(mappedBy = "user")
+    private Teacher teacher;
+
+    @OneToOne(mappedBy = "user")
+    private Manager manager;
+
+    @OneToMany(mappedBy = "user")
+    private Set<Question> questions;
 
 }

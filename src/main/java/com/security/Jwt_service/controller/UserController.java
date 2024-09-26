@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
@@ -25,9 +27,7 @@ public class UserController {
         Long userId= ((CustomUserDetails ) authentication.getPrincipal()).getId();
         return new ResponseEntity<>(userService.updateUser(userId,email), HttpStatus.OK);
     }
-    @PutMapping
-    public ResponseEntity<UserResponseDto> addTeamForUser(Authentication authentication, @RequestBody String nameTeam){
-        Long userId= ((CustomUserDetails ) authentication.getPrincipal()).getId();
-        return new ResponseEntity<>(userService.addTeam(userId,nameTeam), HttpStatus.OK);
-    }
+
+
+
 }

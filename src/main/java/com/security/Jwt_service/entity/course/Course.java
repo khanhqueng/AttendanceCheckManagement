@@ -1,9 +1,10 @@
-package com.security.Jwt_service.entity.user;
+package com.security.Jwt_service.entity.course;
 
 import com.security.Jwt_service.entity.Base;
+import com.security.Jwt_service.entity.classroom.Classroom;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,10 +19,14 @@ import java.util.Set;
 @AllArgsConstructor
 
 @Entity
-@Table(name = "permission")
-public class Permission extends Base {
-    @Column(name = "name", nullable = false,unique = true)
+@Table(name = "course")
+public class Course extends Base {
+    @Column(name = "name")
     private String name;
-    @ManyToMany(mappedBy = "permissions")
-    private Set<Role> roles;
+
+    @Column(name = "course_code")
+    private String courseCode;
+
+    @OneToMany(mappedBy = "course")
+    private Set<Classroom> classrooms;
 }

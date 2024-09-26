@@ -2,10 +2,7 @@ package com.security.Jwt_service.entity.user;
 
 import com.security.Jwt_service.entity.Base;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Set;
 
@@ -13,21 +10,13 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 
 @Entity
 @Table(name = "role")
 public class Role extends Base {
     @Column(name = "name", nullable = false,unique = true)
     private String name;
-    @ManyToMany(mappedBy = "roles")
+    @OneToMany(mappedBy = "role")
     private Set<User> users;
-    @ManyToMany
-    @JoinTable(
-            name = "role_permission",
-            joinColumns  = @JoinColumn(name = "role_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "permission_id", referencedColumnName = "id")
-    )
-    private Set<Permission> permissions;
-    @OneToOne(mappedBy = "role")
-    private Team team;
 }

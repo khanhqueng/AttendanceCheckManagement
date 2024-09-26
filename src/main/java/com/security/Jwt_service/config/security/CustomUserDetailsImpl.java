@@ -22,7 +22,7 @@ public class CustomUserDetailsImpl implements UserDetailsService {
                 ()-> new UsernameNotFoundException("User not found with username :" + username)
         );
         List<GrantedAuthority> authorities= new ArrayList<>();
-        user.getRoles().forEach(role -> authorities.add(new SimpleGrantedAuthority(role.getName())));
+        authorities.add(new SimpleGrantedAuthority(user.getRole().getName()));
         return new CustomUserDetails(
                 user.getId(),
                 user.getUsername(),

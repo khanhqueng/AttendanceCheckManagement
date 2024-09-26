@@ -18,6 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import com.security.Jwt_service.util.TokenType;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
@@ -44,7 +47,7 @@ public class AuthServiceImpl implements AuthService {
             CustomUserDetails customUserDetails= new CustomUserDetails(user.getId(),
                     user.getUsername(),
                     user.getPassword(),
-                    user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName())).toList());
+                    List.of(new SimpleGrantedAuthority(user.getRole().getName())));
             String newAccessToken = jwtService.generateAccessToken(customUserDetails);
             return TokenResponseDto.builder()
                     .accToken(newAccessToken)
