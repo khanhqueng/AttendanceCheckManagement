@@ -1,7 +1,5 @@
-package com.security.Jwt_service.dto.request;
+package com.security.Jwt_service.dto.request.user;
 
-import jakarta.persistence.Column;
-import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

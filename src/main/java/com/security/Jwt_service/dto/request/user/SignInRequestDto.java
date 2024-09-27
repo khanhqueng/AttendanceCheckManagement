@@ -1,4 +1,4 @@
-package com.security.Jwt_service.dto.request;
+package com.security.Jwt_service.dto.request.user;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

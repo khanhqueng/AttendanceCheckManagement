@@ -1,8 +1,8 @@
 package com.security.Jwt_service.service.impl;
 
 import com.security.Jwt_service.config.security.CustomUserDetails;
-import com.security.Jwt_service.dto.request.SignInRequestDto;
-import com.security.Jwt_service.dto.response.TokenResponseDto;
+import com.security.Jwt_service.dto.request.user.SignInRequestDto;
+import com.security.Jwt_service.dto.response.auth.TokenResponseDto;
 import com.security.Jwt_service.entity.user.User;
 import com.security.Jwt_service.repository.UserRepository;
 import com.security.Jwt_service.service.AuthService;
@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import com.security.Jwt_service.util.TokenType;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Service

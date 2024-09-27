@@ -66,6 +66,10 @@ public class SecurityConfig {
                     .authorizeHttpRequests(
                             authorize-> {
                                 authorize.requestMatchers("/auth/**","/chat/**").permitAll()
+                                        .requestMatchers("/student/**").permitAll()
+                                        .requestMatchers("/course/**").permitAll()
+                                        .requestMatchers("/teacher/**").permitAll()
+                                        .requestMatchers("/classroom/**").permitAll()
                                         .anyRequest().authenticated();
                             }
                     )

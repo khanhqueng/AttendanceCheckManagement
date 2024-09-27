@@ -1,4 +1,4 @@
-package com.security.Jwt_service.dto.response;
+package com.security.Jwt_service.dto.response.auth;
 
 import lombok.Builder;
 import lombok.Getter;

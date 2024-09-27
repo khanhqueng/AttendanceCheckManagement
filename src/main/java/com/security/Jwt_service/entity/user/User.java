@@ -4,10 +4,7 @@ import com.security.Jwt_service.entity.Base;
 import com.security.Jwt_service.entity.session.Question;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 import java.util.Set;
@@ -19,6 +16,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "user")
+@Builder
 public class User extends Base {
     @Column(name = "username", unique = true, nullable = false)
     private String username;

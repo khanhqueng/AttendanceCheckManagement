@@ -1,4 +1,4 @@
-package com.security.Jwt_service.dto.response;
+package com.security.Jwt_service.dto.response.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,6 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 
 public class UserResponseDto {
+    private Long id;
     private String username;
     private String password;
 }

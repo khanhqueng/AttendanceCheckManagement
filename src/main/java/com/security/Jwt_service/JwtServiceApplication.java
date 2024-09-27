@@ -8,10 +8,6 @@ import org.springframework.context.annotation.Scope;
 
 @SpringBootApplication
 public class JwtServiceApplication {
-	@Bean
-	public ModelMapper mapper(){
-		return new ModelMapper();
-	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(JwtServiceApplication.class, args);

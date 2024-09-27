@@ -1,12 +1,11 @@
 package com.security.Jwt_service.controller;
 
-import com.security.Jwt_service.dto.request.SignInRequestDto;
-import com.security.Jwt_service.dto.request.UserCreateDto;
-import com.security.Jwt_service.dto.response.TokenResponseDto;
-import com.security.Jwt_service.dto.response.UserResponseDto;
+import com.security.Jwt_service.dto.request.user.SignInRequestDto;
+import com.security.Jwt_service.dto.request.user.UserCreateDto;
+import com.security.Jwt_service.dto.response.auth.TokenResponseDto;
+import com.security.Jwt_service.dto.response.user.UserResponseDto;
 import com.security.Jwt_service.service.AuthService;
 import com.security.Jwt_service.service.UserService;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
