@@ -69,7 +69,9 @@ public class SecurityConfig {
                                         .requestMatchers("/student/**").permitAll()
                                         .requestMatchers("/course/**").permitAll()
                                         .requestMatchers("/teacher/**").permitAll()
-                                        .requestMatchers("/classroom/**").permitAll()
+                                        .requestMatchers("/classroom/**").hasAuthority("TEACHER")
+                                        .requestMatchers("/user/**").permitAll()
+                                        .requestMatchers("/session/**").permitAll()
                                         .anyRequest().authenticated();
                             }
                     )

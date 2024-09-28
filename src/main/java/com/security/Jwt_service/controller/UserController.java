@@ -24,6 +24,10 @@ public class UserController {
         Long userId= ((CustomUserDetails ) authentication.getPrincipal()).getId();
         return new ResponseEntity<>(userService.updateUser(userId,email), HttpStatus.OK);
     }
+    @PutMapping("/role/{id}")
+    public ResponseEntity<UserResponseDto> changeRoleUser( @PathVariable(name = "id") Long userId, @RequestParam(name = "role_name") String roleName ){
+        return new ResponseEntity<>(userService.changeRole(userId,roleName), HttpStatus.OK);
+    }
 
 
 

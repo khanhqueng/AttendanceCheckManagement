@@ -49,4 +49,14 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId).orElseThrow(()-> new ResourceNotFoundException("user", "id", userId));
         return userMapper.entityToResponse(userRepository.save(user));
     }
+
+    @Override
+    public UserResponseDto changeRole(Long userId, String nameRole) {
+        User user= userRepository.findById(userId).orElseThrow(()-> new ResourceNotFoundException("user", "id", userId));
+        Role newRole= roleRepository.findByName(nameRole).orElseThrow(
+                ()-> new ResourceNotFoundException("Role", "name", nameRole)
+        );
+        user.setRole(newRole);
+        return userMapper.entityToResponse(userRepository.save(user));
+    }
 }

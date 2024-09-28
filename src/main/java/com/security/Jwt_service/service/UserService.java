@@ -7,4 +7,5 @@ public interface UserService {
     UserResponseDto createUser(UserCreateDto createDto);
     UserResponseDto getUserById(Long userId);
     UserResponseDto updateUser(Long userId, String email);
+    UserResponseDto changeRole(Long userId, String nameRole);
 }
