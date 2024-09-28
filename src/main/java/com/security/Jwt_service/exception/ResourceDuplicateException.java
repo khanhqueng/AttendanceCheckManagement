@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class ResourceDuplicateException extends RuntimeException{
     private String resourceName;
     private String fieldName;
-    private String fieldValue;
-    public ResourceDuplicateException(String resourceName, String fieldName, String fieldValue) {
+    private Object fieldValue;
+    public ResourceDuplicateException(String resourceName, String fieldName, Object fieldValue) {
         super(String.format("%s has duplicate result with %s: %s", resourceName,fieldName,fieldValue));
         this.resourceName = resourceName;
         this.fieldName = fieldName;

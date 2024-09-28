@@ -10,4 +10,6 @@ import java.util.Set;
 public interface StudentRepository extends JpaRepository<Student, Long> {
     Boolean existsByEmailOrStudentCode(String email, String studentCode);
     Set<Student> findAllByIdIn(List<Long> ids);
+    Optional<Student> findByUserId(Long userId);
+
 }
