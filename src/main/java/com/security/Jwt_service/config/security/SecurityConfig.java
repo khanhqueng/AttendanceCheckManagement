@@ -37,20 +37,6 @@ public class SecurityConfig {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     @Bean
-    public WebMvcConfigurer corsConfigure(){
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-               registry.addMapping("**")
-                       .allowedOrigins("http://localhost:8050")
-                       .allowedMethods("GET", "POST", "PUT","DELETE")
-                       .allowedHeaders("*")
-                       .allowCredentials(false)
-                       .maxAge(3600);
-            }
-        };
-    }
-    @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
 
@@ -78,7 +64,6 @@ public class SecurityConfig {
             http
                     .cors(Customizer.withDefaults())
                     .csrf(csrf -> csrf.disable())
-                    .cors(AbstractHttpConfigurer::disable)
                     .authorizeHttpRequests(
                             authorize-> {
                                 authorize.requestMatchers("/auth/**","/chat/**").permitAll()
