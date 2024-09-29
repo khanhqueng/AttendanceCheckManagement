@@ -6,7 +6,8 @@ services:
     container_name: attendance
     image: quangkhanh288/attendance-server
     restart: unless-stopped
-
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
     ports:
       - 8000:8000
     networks:
