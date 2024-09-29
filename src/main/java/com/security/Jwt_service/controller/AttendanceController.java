@@ -21,4 +21,9 @@ public class AttendanceController {
         Long userId= ((CustomUserDetails) authentication.getPrincipal()).getId();
         return new ResponseEntity<>(attendanceService.attendStudent(id,userId), HttpStatus.CREATED);
     }
+    @PostMapping("/{session_id}/{student_id}")
+    public ResponseEntity<AttendanceResponseDto> createCourse(@PathVariable(name = "session_id") Long sessionId,
+                                                              @PathVariable(name = "student_id") Long studentId){
+        return new ResponseEntity<>(attendanceService.updateAbsentStudent(sessionId,studentId), HttpStatus.OK);
+    }
 }
