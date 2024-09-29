@@ -1,16 +1,11 @@
 version: '3.8'
-name: codebase
+name: attendance
 
 services:
   codebase:
-    container_name: codebase
-    image: codebase
+    container_name: attendance
+    image: quangkhanh288/attendance-server
     restart: unless-stopped
-    build:
-      context: ./
-      dockerfile: Dockerfile
-      args:
-        SERVER_NAME: Jwt-service
 
     ports:
       - 8000:8000
