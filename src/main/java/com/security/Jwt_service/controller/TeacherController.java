@@ -6,6 +6,8 @@ import com.security.Jwt_service.dto.response.student.StudentResponseDto;
 import com.security.Jwt_service.dto.response.teacher.TeacherResponseDto;
 import com.security.Jwt_service.service.StudentService;
 import com.security.Jwt_service.service.TeacherService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/teacher")
 @RequiredArgsConstructor
+@Tag(name = "Teacher Controller")
 public class TeacherController {
     private final TeacherService teacherService;
+    @Operation(summary = "Add teacher", description = "API for create new teacher")
     @PostMapping
     public ResponseEntity<TeacherResponseDto> createTeacher(@RequestBody TeacherCreateDto dto){
         return new ResponseEntity<>(teacherService.createTeacher(dto), HttpStatus.CREATED);

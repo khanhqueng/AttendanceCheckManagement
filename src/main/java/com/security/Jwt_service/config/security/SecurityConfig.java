@@ -66,7 +66,10 @@ public class SecurityConfig {
                     .csrf(csrf -> csrf.disable())
                     .authorizeHttpRequests(
                             authorize-> {
-                                authorize.requestMatchers("/auth/**","/chat/**").permitAll()
+                                authorize
+                                        .requestMatchers("/swagger-ui/**").permitAll()
+                                        .requestMatchers("/v3/api-docs/**").permitAll()
+                                        .requestMatchers("/auth/**","/chat/**").permitAll()
                                         .requestMatchers("/student/**").permitAll()
                                         .requestMatchers("/course/**").permitAll()
                                         .requestMatchers("/teacher/**").permitAll()
