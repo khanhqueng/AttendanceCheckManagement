@@ -19,8 +19,7 @@ jobs:
       - name: Fetch Public Key
         id: get_public_key
         run: |
-          PUBLIC_KEY_RESPONSE=$
-          ( curl \
+          PUBLIC_KEY_RESPONSE=$( curl \
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer $TOKEN" \
             https://api.github.com/repos/${{ github.repository }}/actions/secrets/public-key)
@@ -29,7 +28,7 @@ jobs:
           echo "PUBLIC_KEY=$PUBLIC_KEY" >> $GITHUB_ENV
           echo "KEY_ID=$KEY_ID" >> $GITHUB_ENV
         env:
-          TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Encrypt Private Key
         env:
