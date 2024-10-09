@@ -23,6 +23,8 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer $TOKEN" \
             https://api.github.com/repos/${{ github.repository }}/actions/secrets/public-key)
+           # Debug: Print the full response
+          echo "Response: $PUBLIC_KEY_RESPONSE"
           PUBLIC_KEY=$(echo "$PUBLIC_KEY_RESPONSE" | jq -r .key)
           KEY_ID=$(echo "$PUBLIC_KEY_RESPONSE" | jq -r .key_id)
           echo "PUBLIC_KEY=$PUBLIC_KEY" >> $GITHUB_ENV
