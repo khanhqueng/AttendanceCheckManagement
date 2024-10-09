@@ -63,7 +63,7 @@ jobs:
             # Step 4: Copy the script to the remote server
       - name: Copy the script to the remote server
         run: |
-          scp -o StrictHostKeyChecking=no script.ps1 'NITRO 5'@192.168.1.94:C:\Users\NITRO\ 5\remote-path\          
+          scp -o StrictHostKeyChecking=no script.ps1 'NITRO 5'@192.168.1.94:C:\Users\NITRO 5\remote-path\          
           
              # Step 5: Execute the script on the remote server
       - name: Execute the script on remote server
