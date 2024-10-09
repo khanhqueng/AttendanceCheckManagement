@@ -19,15 +19,17 @@ jobs:
       - name: Fetch Public Key
         id: get_public_key
         run: |
-          PUBLIC_KEY_RESPONSE=$(curl -L \ -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          PUBLIC_KEY_RESPONSE=$
+          ( curl \
             -H "Accept: application/vnd.github+json" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
+            -H "Authorization: Bearer $TOKEN" \
             https://api.github.com/repos/${{ github.repository }}/actions/secrets/public-key)
-          
           PUBLIC_KEY=$(echo "$PUBLIC_KEY_RESPONSE" | jq -r .key)
           KEY_ID=$(echo "$PUBLIC_KEY_RESPONSE" | jq -r .key_id)
           echo "PUBLIC_KEY=$PUBLIC_KEY" >> $GITHUB_ENV
           echo "KEY_ID=$KEY_ID" >> $GITHUB_ENV
+        env:
+          TOKEN: ${{ secrets.ACCESS_TOKEN }}
 
       - name: Encrypt Private Key
         env:
