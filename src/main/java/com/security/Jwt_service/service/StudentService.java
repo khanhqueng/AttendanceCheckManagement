@@ -11,4 +11,5 @@ import java.util.List;
 public interface StudentService {
     StudentResponseDto createStudent(StudentCreateDto createDto);
     List<StudentResponseDto> addStudentThroughExcel(MultipartFile excelFile) throws IOException;
+    List<StudentResponseDto> getAllStudent();
 }

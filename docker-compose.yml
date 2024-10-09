@@ -27,5 +27,5 @@ services:
     networks:
       - attendance-network
 networks:
-  betflix-network:
+  attendance-network:
     external: true

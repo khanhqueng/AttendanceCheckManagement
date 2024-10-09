@@ -100,4 +100,9 @@ public class StudentServiceImpl implements StudentService {
         studentRepository.saveAll(studentList);
         return studentList.stream().map(studentMapper::entityToResponse).toList();
     }
+
+    @Override
+    public List<StudentResponseDto> getAllStudent() {
+        return studentRepository.findAll().stream().map(student -> studentMapper.entityToResponse(student)).toList();
+    }
 }
