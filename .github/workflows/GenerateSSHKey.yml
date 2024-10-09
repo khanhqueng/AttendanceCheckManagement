@@ -7,6 +7,8 @@ jobs:
   generate-and-store-key:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
       - name: Generate SSH Key
         run: |
           ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N "" -C "github-action-runner"
