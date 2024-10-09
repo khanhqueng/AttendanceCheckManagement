@@ -54,7 +54,6 @@ jobs:
         uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
       - name: Create a script to pull Docker image
         run: |
             echo "#!/bin/bash" > script.ps1
