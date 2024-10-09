@@ -59,7 +59,7 @@ jobs:
             echo "#!/bin/bash" > script.ps1
             echo "docker pull quangkhanh288/attendance-server:latest" >> script.ps1
             chmod +x script.ps1
-          
+  
             # Step 4: Copy the script to the remote server
       - name: Copy the script to the remote server
         run: |
