@@ -6,10 +6,7 @@ on:
 jobs:
   generate-and-store-key:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      actions: write
-      security-events: write
+    permissions: write-all
     steps:
 
       - name: Checkout repository
