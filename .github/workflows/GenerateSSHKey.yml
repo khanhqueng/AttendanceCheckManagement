@@ -1,0 +1,23 @@
+name: Generate and Store SSH Key
+
+on:
+  workflow_dispatch: # Trigger manually to run this once
+
+jobs:
+  generate-and-store-key:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate SSH Key
+        run: |
+          ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N "" -C "github-action-runner"
+          cat ~/.ssh/id_rsa.pub
+
+      - name: Display SSH Public Key
+        run: cat ~/.ssh/id_rsa.pub
+
+      - name: Save SSH Private Key to GitHub Secrets
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "::add-mask::$(cat ~/.ssh/id_rsa)" # Mask the key in logs
+          gh secret set SSH_PRIVATE_KEY -b"$(cat ~/.ssh/id_rsa)"
