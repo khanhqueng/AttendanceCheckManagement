@@ -19,8 +19,8 @@ jobs:
       - name: Fetch Public Key
         id: get_public_key
         run: |
-          PUBLIC_KEY_RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Accept: application/vnd.github.v3+json" \
+          PUBLIC_KEY_RESPONSE=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
             https://api.github.com/repos/${{ github.repository }}/actions/secrets/public-key)
           
           PUBLIC_KEY=$(echo "$PUBLIC_KEY_RESPONSE" | jq -r .key)
