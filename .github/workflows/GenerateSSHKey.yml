@@ -1,28 +1,43 @@
 name: Generate and Store SSH Key
 
 on:
-  workflow_dispatch: # Trigger manually to run this once
+  workflow_dispatch:
 
 jobs:
   generate-and-store-key:
     runs-on: ubuntu-latest
-    permissions: write-all
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      - name: Checkout repository
-        uses: actions/checkout@v3
       - name: Generate SSH Key
         run: |
-          ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N "" -C "github-action-runner"
+          ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N ""
+          echo "SSH public key:"
           cat ~/.ssh/id_rsa.pub
 
-      - name: Display SSH Public Key
-        run: cat ~/.ssh/id_rsa.pub
-
-      - name: Save SSH Private Key to GitHub Secrets
-
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Fetch Public Key
+        id: get_public_key
         run: |
-          echo "::add-mask::$(cat ~/.ssh/id_rsa)" # Mask the key in logs
-          gh secret set SSH_PRIVATE_KEY -b"$(cat ~/.ssh/id_rsa)"
+          PUBLIC_KEY_RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/${{ github.repository }}/actions/secrets/public-key)
+          
+          PUBLIC_KEY=$(echo "$PUBLIC_KEY_RESPONSE" | jq -r .key)
+          KEY_ID=$(echo "$PUBLIC_KEY_RESPONSE" | jq -r .key_id)
+          echo "PUBLIC_KEY=$PUBLIC_KEY" >> $GITHUB_ENV
+          echo "KEY_ID=$KEY_ID" >> $GITHUB_ENV
+
+      - name: Encrypt Private Key
+        env:
+          PUBLIC_KEY: ${{ env.PUBLIC_KEY }}
+        run: |
+          ENCRYPTED_PRIVATE_KEY=$(cat ~/.ssh/id_rsa | openssl rsautl -encrypt -pubin -inkey <(echo "$PUBLIC_KEY") | base64 | tr -d '\n')
+          echo "ENCRYPTED_PRIVATE_KEY=$ENCRYPTED_PRIVATE_KEY" >> $GITHUB_ENV
+
+      - name: Save Private Key to GitHub Secret
+        run: |
+          curl -X PUT -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/${{ github.repository }}/actions/secrets/SSH_PRIVATE_KEY \
+            -d "{\"encrypted_value\":\"${{ env.ENCRYPTED_PRIVATE_KEY }}\", \"key_id\":\"${{ env.KEY_ID }}\"}"
