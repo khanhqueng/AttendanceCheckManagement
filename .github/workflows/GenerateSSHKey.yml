@@ -8,8 +8,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      pull-requests: write
-      repository-projects: write
+      actions: write
+      security-events: write
     steps:
 
       - name: Checkout repository
