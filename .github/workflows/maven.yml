@@ -60,12 +60,12 @@ jobs:
             echo "docker pull quangkhanh288/attendance-server:latest" >> script.ps1
             chmod +x script.ps1
   
-            # Step 4: Copy the script to the remote server
+      # Step 4: Copy the script to the remote server
       - name: Copy the script to the remote server
         run: |
           scp -o StrictHostKeyChecking=no script.ps1 'NITRO 5'@192.168.1.94:C:\Users\NITRO\ 5\remote-path\          
           
-             # Step 5: Execute the script on the remote server
+      # Step 5: Execute the script on the remote server
       - name: Execute the script on remote server
         run: |
           ssh -o StrictHostKeyChecking=no 'NITRO 5'@192.168.1.94 "powershell -ExecutionPolicy Bypass -File 'C:\Users\NITRO 5\remote-path\script.ps1'"
