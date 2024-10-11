@@ -28,7 +28,7 @@ jobs:
           echo "PUBLIC_KEY=$PUBLIC_KEY" >> $GITHUB_ENV
           echo "KEY_ID=$KEY_ID" >> $GITHUB_ENV
         env:
-          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TOKEN: ${{ secrets.MY_PAT }}
 
       - name: Encrypt Private Key
         env:
