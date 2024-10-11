@@ -49,7 +49,6 @@ jobs:
           script: |
             const fs = require('fs');
             const sodium = require('libsodium-wrappers');
-            const core = require('@actions/core'); // Import core for setting outputs
             
             // Read the private key from the file
             const secret = fs.readFileSync('/home/runner/.ssh/id_rsa', 'utf8').trim();
@@ -67,10 +66,9 @@ jobs:
             
             // Convert the encrypted Uint8Array to Base64
             let output = sodium.to_base64(encBytes, sodium.base64_variants.ORIGINAL);
-            
-            // Set the output variable for later steps
-            core.setOutput('encrypted_secret', output);
+          
             console.log(output);
+            return output;
 
       - name: Save Private Key to GitHub Secret
         run: |
