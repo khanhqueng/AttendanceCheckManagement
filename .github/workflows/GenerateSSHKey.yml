@@ -37,7 +37,7 @@ jobs:
           PUBLIC_KEY: ${{ env.PUBLIC_KEY }}
         run: |
           echo "-----BEGIN PUBLIC KEY-----" > public_key.pem
-          echo "$PUBLIC_KEY" >> public_key.pem
+          echo "$PUBLIC_KEY" | base64 -d >> public_key.pem
           echo "-----END PUBLIC KEY-----" >> public_key.pem
           ls -l public_key.pem
           cat public_key.pem
