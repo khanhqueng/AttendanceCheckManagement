@@ -36,10 +36,12 @@ jobs:
         env:
           PUBLIC_KEY: ${{ env.PUBLIC_KEY }}
         run: |
-          echo "$PUBLIC_KEY"  > public_key.pem
+          echo "-----BEGIN PUBLIC KEY-----" > public_key.pem
+          echo "${{ steps.get_public_key.outputs.public_key }}" >> public_key.pem
+          echo "-----END PUBLIC KEY-----" >> public_key.pem
           ls -l public_key.pem
           cat public_key.pem
-          ENCRYPTED_PRIVATE_KEY=$(cat ~/.ssh/id_rsa | openssl pkeyutl -encrypt -pubin -inkey public_key.pem | base64)
+          ENCRYPTED_PRIVATE_KEY=$(cat ~/.ssh/id_rsa | openssl rsautl  -encrypt -pubin -inkey public_key.pem | base64)
           echo "ENCRYPTED_PRIVATE_KEY=$ENCRYPTED_PRIVATE_KEY" >> $GITHUB_ENV
           echo "Encrypted_Private_Key: $ENCRYPTED_PRIVATE_KEY"
 
