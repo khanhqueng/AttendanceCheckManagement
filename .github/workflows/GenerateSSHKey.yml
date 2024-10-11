@@ -36,7 +36,7 @@ jobs:
         env:
           PUBLIC_KEY: ${{ env.PUBLIC_KEY }}
         run: |
-          ENCRYPTED_PRIVATE_KEY=$(cat ~/.ssh/id_rsa | openssl rsautl -encrypt -pubin -inkey <(echo "$PUBLIC_KEY") | base64 | tr -d '\n')
+          ENCRYPTED_PRIVATE_KEY=$(cat ~/.ssh/id_rsa | openssl pkeyutl -encrypt -pubin -inkey <(echo "$PUBLIC_KEY") | base64 | tr -d '\n')
           echo "ENCRYPTED_PRIVATE_KEY=$ENCRYPTED_PRIVATE_KEY" >> $GITHUB_ENV
 
       - name: Save Private Key to GitHub Secret
