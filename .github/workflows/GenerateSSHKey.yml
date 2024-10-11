@@ -37,7 +37,7 @@ jobs:
           PUBLIC_KEY: ${{ env.PUBLIC_KEY }}
         run: |
           echo "-----BEGIN PUBLIC KEY-----" > public_key.pem
-          echo "${{ steps.get_public_key.outputs.public_key }}" >> public_key.pem
+          echo "$PUBLIC_KEY" >> public_key.pem
           echo "-----END PUBLIC KEY-----" >> public_key.pem
           ls -l public_key.pem
           cat public_key.pem
