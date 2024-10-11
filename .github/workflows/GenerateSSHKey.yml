@@ -31,20 +31,46 @@ jobs:
           echo "KEY_ID=$KEY_ID" >> $GITHUB_ENV
         env:
           TOKEN: ${{ secrets.MY_PAT }}
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'  # Specify the Node.js version you need
 
-      - name: Encrypt Private Key
+      - name: Install libsodium
+        run: |
+          npm install libsodium-wrappers
+
+      - name: Read Private Key and Encrypt
         env:
           PUBLIC_KEY: ${{ env.PUBLIC_KEY }}
-        run: |
-          echo "-----BEGIN PUBLIC KEY-----" > public_key.pem
-          echo "$PUBLIC_KEY" | base64 -d >> public_key.pem
-          echo "" >> public_key.pem
-          echo -n "-----END PUBLIC KEY-----" >> public_key.pem
-          ls -l public_key.pem
-          cat public_key.pem
-          ENCRYPTED_PRIVATE_KEY=$(cat ~/.ssh/id_rsa | openssl rsautl  -encrypt -pubin -inkey public_key.pem | base64)
-          echo "ENCRYPTED_PRIVATE_KEY=$ENCRYPTED_PRIVATE_KEY" >> $GITHUB_ENV
-          echo "Encrypted_Private_Key: $ENCRYPTED_PRIVATE_KEY"
+        id: encrypt  # Assign an ID to this step
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const sodium = require('libsodium-wrappers');
+            const core = require('@actions/core'); // Import core for setting outputs
+            
+            // Read the private key from the file
+            const secret = fs.readFileSync('/home/runner/.ssh/id_rsa', 'utf8').trim();
+            const key = '$PUBLIC_KEY'; // Replace with your actual key name
+            
+            // Check if libsodium is ready and then proceed
+            await sodium.ready;
+            
+            // Convert the secret and key to a Uint8Array
+            let binkey = sodium.from_base64(key, sodium.base64_variants.ORIGINAL);
+            let binsec = sodium.from_string(secret);
+            
+            // Encrypt the secret using libsodium
+            let encBytes = sodium.crypto_box_seal(binsec, binkey);
+            
+            // Convert the encrypted Uint8Array to Base64
+            let output = sodium.to_base64(encBytes, sodium.base64_variants.ORIGINAL);
+            
+            // Set the output variable for later steps
+            core.setOutput('encrypted_secret', output);
+            console.log(output);
 
       - name: Save Private Key to GitHub Secret
         run: |
