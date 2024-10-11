@@ -52,7 +52,7 @@ jobs:
             
             // Read the private key from the file
             const secret = fs.readFileSync('/home/runner/.ssh/id_rsa', 'utf8').trim();
-            const key = '$PUBLIC_KEY'; // Replace with your actual key name
+            const key = process.env.PUBLIC_KEY; // Replace with your actual key name
             
             // Check if libsodium is ready and then proceed
             sodium.ready.then(() => {
