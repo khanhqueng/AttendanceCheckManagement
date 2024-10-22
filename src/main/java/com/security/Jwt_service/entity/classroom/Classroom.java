@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Set;
 
 @Getter
@@ -33,6 +34,14 @@ public class Classroom extends Base {
     @Column(name = "end_date")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate endDate;
+
+    @Column(name = "start_time")
+    @JsonFormat(pattern = "HH:mm:ss")
+    private LocalTime startTime;
+
+    @Column(name = "end_time")
+    @JsonFormat(pattern = "HH:mm:ss")
+    private LocalTime endTime;
 
     @Column(name = "allowed_lateTime")
     private int allowedLateTime;

@@ -29,6 +29,13 @@ public class Session extends Base {
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startTime;
 
+    @Column(name = "end_time")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime endTime;
+
+    @Column(name = "is_over")
+    private Integer isOver;
+
     @ManyToOne
     @JoinColumn(name = "classroom_id",referencedColumnName = "id", nullable = false)
     private Classroom classroom;

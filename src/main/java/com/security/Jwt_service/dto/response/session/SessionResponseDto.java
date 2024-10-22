@@ -18,4 +18,5 @@ public class SessionResponseDto {
     private int no;
 
     private LocalDateTime startTime;
+    private LocalDateTime endTime;
 }

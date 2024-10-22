@@ -11,10 +11,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/teacher")
@@ -22,9 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Teacher Controller")
 public class TeacherController {
     private final TeacherService teacherService;
-    @Operation(summary = "Add teacher", description = "API for create new teacher")
-    @PostMapping
-    public ResponseEntity<TeacherResponseDto> createTeacher(@RequestBody TeacherCreateDto dto){
-        return new ResponseEntity<>(teacherService.createTeacher(dto), HttpStatus.CREATED);
+    @GetMapping
+    public ResponseEntity<List<TeacherResponseDto>> getAllStudent() throws IOException {
+        return new ResponseEntity<>(teacherService.getAllTeachers(), HttpStatus.OK);
     }
+
 }

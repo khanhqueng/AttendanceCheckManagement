@@ -24,11 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
     private final UserService userService;
     private final AuthService authService;
-    @Operation(summary = "Create user", description = "API for create new user")
-    @PostMapping("/signup")
-    public ResponseEntity<UserResponseDto> registration(@RequestBody UserCreateDto createDto){
-        return new ResponseEntity<>(userService.createUser(createDto), HttpStatus.CREATED);
-    }
+
     @Operation(summary = "Login", description = "API for supply access token, refresh token")
     @PostMapping("/login")
     public ResponseEntity<TokenResponseDto> login(@RequestBody SignInRequestDto signInRequestDto){

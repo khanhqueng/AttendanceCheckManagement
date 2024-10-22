@@ -6,10 +6,16 @@ import com.security.Jwt_service.entity.user.Role;
 import com.security.Jwt_service.entity.user.User;
 import com.security.Jwt_service.exception.ResourceDuplicateException;
 import com.security.Jwt_service.exception.ResourceNotFoundException;
+import com.security.Jwt_service.mapper.student.StudentMapper;
+import com.security.Jwt_service.mapper.teacher.TeacherMapper;
 import com.security.Jwt_service.mapper.user.UserMapper;
 import com.security.Jwt_service.repository.RoleRepository;
+import com.security.Jwt_service.repository.StudentRepository;
+import com.security.Jwt_service.repository.TeacherRepository;
 import com.security.Jwt_service.repository.UserRepository;
+import com.security.Jwt_service.service.StudentService;
 import com.security.Jwt_service.service.UserService;
+import com.security.Jwt_service.service.factorymethod.UserCreateMethod;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -21,22 +27,26 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final StudentRepository studentRepository;
+    private final TeacherRepository teacherRepository;
+    private final StudentMapper studentMapper;
+    private final TeacherMapper teacherMapper;
     private final UserMapper userMapper;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Override
-    public UserResponseDto createUser(UserCreateDto createDto) {
-        if(userRepository.existsByUsername(createDto.getUsername())){
-            throw new ResourceDuplicateException("User", "username", createDto.getUsername());
-        }
-        User user= userMapper.requestToEntity(createDto);
-        passwordEncoder= new BCryptPasswordEncoder();
-        user.setPassword(passwordEncoder.encode(createDto.getPassword()));
-        Role role= Role.builder().name(createDto.getRolName()).build();
-        user.setRole(role);
-        return  userMapper.entityToResponse(userRepository.save(user));
-    }
+//    @Override
+//    public UserResponseDto createUser(UserCreateDto createDto) {
+//        if(userRepository.existsByUsername(createDto.getUsername())){
+//            throw new ResourceDuplicateException("User", "username", createDto.getUsername());
+//        }
+//        User user= userMapper.requestToEntity(createDto);
+//        passwordEncoder= new BCryptPasswordEncoder();
+//        user.setPassword(passwordEncoder.encode(createDto.getPassword()));
+//        Role role= Role.builder().name(createDto.getRolName()).build();
+//        user.setRole(role);
+//        return  userMapper.entityToResponse(userRepository.save(user));
+//    }
 
     @Override
     public UserResponseDto getUserById(Long userId) {
@@ -58,5 +68,12 @@ public class UserServiceImpl implements UserService {
         );
         user.setRole(newRole);
         return userMapper.entityToResponse(userRepository.save(user));
+    }
+
+    @Override
+    public UserCreateMethod createUserMethod(UserCreateDto userCreateDto) {
+        if(userCreateDto.getRoleName().equals("Student")) return new StudentServiceImpl(studentRepository,studentMapper,roleRepository);
+        else if(userCreateDto.getRoleName().equals("Teacher")) return new TeacherServiceImpl(teacherRepository,roleRepository,teacherMapper);
+        return null;
     }
 }

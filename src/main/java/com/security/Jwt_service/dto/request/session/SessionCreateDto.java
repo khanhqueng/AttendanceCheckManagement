@@ -22,6 +22,8 @@ public class SessionCreateDto {
     @JsonFormat(pattern = "HH:mm")
     @NotNull(message = "on-class time must not be null")
     private LocalTime onClassTime;
+    @NotNull(message = "end time must not be null")
+    private LocalTime endClassTime;
     @NotNull(message = "classroom id must not be null")
     private Long classRoomId;
 }

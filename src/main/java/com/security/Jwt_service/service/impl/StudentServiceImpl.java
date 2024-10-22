@@ -1,7 +1,10 @@
 package com.security.Jwt_service.service.impl;
 
 import com.security.Jwt_service.dto.request.student.StudentCreateDto;
+import com.security.Jwt_service.dto.request.user.UserCreateDto;
 import com.security.Jwt_service.dto.response.student.StudentResponseDto;
+import com.security.Jwt_service.dto.response.user.UserResponseDto;
+import com.security.Jwt_service.dto.response.user.UserResponseFactory;
 import com.security.Jwt_service.entity.user.Role;
 import com.security.Jwt_service.entity.user.Student;
 import com.security.Jwt_service.entity.user.User;
@@ -11,6 +14,7 @@ import com.security.Jwt_service.mapper.student.StudentMapper;
 import com.security.Jwt_service.repository.RoleRepository;
 import com.security.Jwt_service.repository.StudentRepository;
 import com.security.Jwt_service.service.StudentService;
+import com.security.Jwt_service.service.factorymethod.UserCreateMethod;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -35,31 +39,31 @@ import java.util.Random;
 @RequiredArgsConstructor
 @Service
 @Transactional
-public class StudentServiceImpl implements StudentService {
+public class StudentServiceImpl implements StudentService, UserCreateMethod {
     private final StudentRepository studentRepository;
     private final StudentMapper studentMapper;
     private final RoleRepository roleRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
-    @Override
-    public StudentResponseDto createStudent(StudentCreateDto createDto) {
-        if(studentRepository.existsByEmailOrStudentCode(createDto.getEmail(), createDto.getStudentCode())){
-            throw new ResourceDuplicateException("Student", "email or student code", createDto.getStudentCode()+" "+ createDto.getEmail());
-        }
-        Student student= studentMapper.requestToEntity(createDto);
-        passwordEncoder= new BCryptPasswordEncoder();
-        Random random= new Random();
-        String resetCode = String. format("%04d", random.nextInt(10000));
-        Role role= roleRepository.findByName("STUDENT").get();
-        User user = User.builder()
-                .username(createDto.getStudentCode())
-                .password(passwordEncoder.encode("12345678"))
-                .resetPasswordCode(resetCode)
-                .role(role)
-                .build();
-        student.setUser(user);
-        return studentMapper.entityToResponse(studentRepository.save(student));
-    }
+//    @Override
+//    public StudentResponseDto createStudent(StudentCreateDto createDto) {
+//        if(studentRepository.existsByEmailOrStudentCode(createDto.getEmail(), createDto.getStudentCode())){
+//            throw new ResourceDuplicateException("Student", "email or student code", createDto.getStudentCode()+" "+ createDto.getEmail());
+//        }
+//        Student student= studentMapper.requestToEntity(createDto);
+//        passwordEncoder= new BCryptPasswordEncoder();
+//        Random random= new Random();
+//        String resetCode = String. format("%04d", random.nextInt(10000));
+//        Role role= roleRepository.findByName("STUDENT").get();
+//        User user = User.builder()
+//                .username(createDto.getStudentCode())
+//                .password(passwordEncoder.encode("12345678"))
+//                .resetPasswordCode(resetCode)
+//                .role(role)
+//                .build();
+//        student.setUser(user);
+//        return studentMapper.entityToResponse(studentRepository.save(student));
+//    }
 
     @Override
     public List<StudentResponseDto> addStudentThroughExcel(MultipartFile excelFile) throws IOException {
@@ -104,5 +108,25 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public List<StudentResponseDto> getAllStudent() {
         return studentRepository.findAll().stream().map(student -> studentMapper.entityToResponse(student)).toList();
+    }
+
+    @Override
+    public UserResponseFactory createUser(UserCreateDto userCreateDto) {
+        if(studentRepository.existsByEmailOrStudentCode(userCreateDto.getEmail(), userCreateDto.getRoleCode())){
+            throw new ResourceDuplicateException("Student", "email or student code", userCreateDto.getEmail()+" "+ userCreateDto.getRoleCode());
+        }
+        Student student= studentMapper.requestToEntity(userCreateDto);
+        passwordEncoder= new BCryptPasswordEncoder();
+        Random random= new Random();
+        String resetCode = String. format("%04d", random.nextInt(10000));
+        Role role= roleRepository.findByName("STUDENT").get();
+        User user = User.builder()
+                .username(userCreateDto.getRoleCode())
+                .password(passwordEncoder.encode("12345678"))
+                .resetPasswordCode(resetCode)
+                .role(role)
+                .build();
+        student.setUser(user);
+        return studentMapper.entityToResponseFactory(studentRepository.save(student));
     }
 }

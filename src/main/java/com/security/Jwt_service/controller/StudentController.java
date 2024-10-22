@@ -21,11 +21,6 @@ import java.util.List;
 @Tag(name = "Student Controller")
 public class StudentController {
     private final StudentService studentService;
-    @Operation(summary = "Add student", description = "API for create new student")
-    @PostMapping
-    public ResponseEntity<StudentResponseDto> createStudent(@RequestBody StudentCreateDto dto){
-        return new ResponseEntity<>(studentService.createStudent(dto), HttpStatus.CREATED);
-    }
     @PostMapping(value = "/import",
             consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE}

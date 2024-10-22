@@ -45,7 +45,7 @@ public class AttendanceServiceImpl implements AttendanceService {
         attendance.setSession(session);
         // get on-class time of the class
         LocalTime onClassTime= session.getStartTime().toLocalTime();
-        // get current time according to Viet nam time
+        // get current time according to Viet nam timeline
         ZoneId zoneId = ZoneId.of("Asia/Ho_Chi_Minh");
         attendance.setOnClassTime(LocalDateTime.now(zoneId));
         LocalTime now = LocalDateTime.now(zoneId).toLocalTime();
