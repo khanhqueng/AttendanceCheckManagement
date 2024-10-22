@@ -11,7 +11,7 @@ services:
     ports:
       - 8000:8000
     networks:
-      - betflix-network
+      - attendance-network
   mysql:
     image: mysql:5.7.40
     container_name: mysql
@@ -25,7 +25,7 @@ services:
     volumes:
       - ./mysql/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
     networks:
-      - betflix-network
+      - attendance-network
 networks:
-  betflix-network:
+  attendance-network:
     external: true
