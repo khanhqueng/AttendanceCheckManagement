@@ -21,6 +21,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -76,5 +77,21 @@ public class AttendanceServiceImpl implements AttendanceService {
         attendance.setSession(session);
         attendance.setStatus("Vang co phep");
         return attendanceMapper.entityToResponse(attendanceRepository.save(attendance));
+    }
+
+    @Override
+    public List<AttendanceResponseDto> getAllAttendanceByStudentId(Long userId) {
+        Student student= studentRepository.findByUserId(userId).orElseThrow(
+                ()-> new ResourceNotFoundException("User","id", userId )
+        );
+        return student.getAttendances().stream().map(attendanceMapper::entityToResponse).toList();
+    }
+
+    @Override
+    public List<AttendanceResponseDto> getAttendanceBySessionId(Long sessionId) {
+        Session session = sessionRepository.findById(sessionId).orElseThrow(
+                ()-> new ResourceNotFoundException("Session", "id", sessionId)
+        );
+        return session.getAttendances().stream().map(attendanceMapper::entityToResponse).toList();
     }
 }

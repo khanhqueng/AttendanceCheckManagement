@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/attendance")
 @RequiredArgsConstructor
@@ -30,5 +32,16 @@ public class AttendanceController {
     public ResponseEntity<AttendanceResponseDto> updateAbsentStudent(@PathVariable(name = "session_id") Long sessionId,
                                                               @PathVariable(name = "student_id") Long studentId){
         return new ResponseEntity<>(attendanceService.updateAbsentStudent(sessionId,studentId), HttpStatus.OK);
+    }
+    @Operation(summary = "Get All Attendance of a student", description = "API for Get All Attendance of a student")
+    @GetMapping
+    public ResponseEntity<List<AttendanceResponseDto>> getAllAttendance(Authentication authentication){
+        Long userId= ((CustomUserDetails) authentication.getPrincipal()).getId();
+        return new ResponseEntity<>(attendanceService.getAllAttendanceByStudentId(userId), HttpStatus.OK);
+    }
+    @Operation(summary = "Update absent student", description = "API for update absent student")
+    @GetMapping("/{session_id}")
+    public ResponseEntity<List<AttendanceResponseDto>> getAllAttendanceBySessionId(@PathVariable(name = "session_id") Long id){
+        return new ResponseEntity<>(attendanceService.getAttendanceBySessionId(id), HttpStatus.OK);
     }
 }

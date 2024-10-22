@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 
 public class AttendanceResponseDto {
+    private Long id;
     private String status;
 
     private LocalDateTime onClassTime;
