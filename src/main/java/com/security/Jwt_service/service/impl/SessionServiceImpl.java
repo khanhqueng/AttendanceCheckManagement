@@ -62,6 +62,14 @@ public class SessionServiceImpl implements SessionService {
         return responseDto;
     }
 
+    @Override
+    public void deleteSession(Long sessionId) {
+        Session session= sessionRepository.findById(sessionId).orElseThrow(
+                ()-> new ResourceNotFoundException("Session", "id", sessionId)
+        );
+        sessionRepository.delete(session);
+    }
+
     @Scheduled(fixedRate = 300000)
     public void updateAbsentStudent(){
         try {

@@ -5,4 +5,5 @@ import com.security.Jwt_service.dto.response.session.SessionResponseCreateDto;
 
 public interface SessionService {
     SessionResponseCreateDto createSessions(SessionCreateDto createDto, int frequency);
+    void deleteSession(Long sessionId);
 }

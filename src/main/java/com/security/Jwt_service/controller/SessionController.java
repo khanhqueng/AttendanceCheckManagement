@@ -24,4 +24,9 @@ public class SessionController {
     public ResponseEntity<SessionResponseCreateDto> createSessions(@RequestBody SessionCreateDto dto, @PathVariable(name = "frequency") int frequency){
         return new ResponseEntity<>(sessionService.createSessions(dto,frequency), HttpStatus.CREATED);
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteSession(@PathVariable(name = "id") Long id){
+        sessionService.deleteSession(id);
+        return new ResponseEntity<>("Delete Successfully", HttpStatus.OK);
+    }
 }
