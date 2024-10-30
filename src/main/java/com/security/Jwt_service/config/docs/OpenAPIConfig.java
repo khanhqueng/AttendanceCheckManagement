@@ -13,6 +13,5 @@ public class OpenAPIConfig {
         return new OpenAPI().info(new Info().title("API-Attendance-Server")
                 .version("v1.0.0").description("description").license(new License().name("API license").url("http://domain")));
 
-
     }
 }

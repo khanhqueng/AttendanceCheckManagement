@@ -1,4 +1,4 @@
-name: Generate and Store SSH Key
+name: Init Credential Packages
 
 on:
   workflow_dispatch:
@@ -14,6 +14,5 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
-          script_stop: true
           script: |
             scp -o StrictHostKeyChecking=no docker-compose.yml khanh@167.172.81.74:/
