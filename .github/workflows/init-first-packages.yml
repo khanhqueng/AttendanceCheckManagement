@@ -1,0 +1,19 @@
+name: Generate and Store SSH Key
+
+on:
+  workflow_dispatch:
+
+jobs:
+  first-init-packages:
+    runs-on: ubuntu-latest
+    steps:
+      - name: executing remote ssh commands
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: ${{ secrets.PORT }}
+          script_stop: true
+          script: |
+            scp -o StrictHostKeyChecking=no docker-compose.yml khanh@167.172.81.74:/
