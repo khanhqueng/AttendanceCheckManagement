@@ -44,4 +44,5 @@ public class AttendanceController {
     public ResponseEntity<List<AttendanceResponseDto>> getAllAttendanceBySessionId(@PathVariable(name = "session_id") Long id){
         return new ResponseEntity<>(attendanceService.getAttendanceBySessionId(id), HttpStatus.OK);
     }
+
 }
