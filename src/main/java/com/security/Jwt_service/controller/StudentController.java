@@ -1,10 +1,14 @@
 package com.security.Jwt_service.controller;
 
+import com.security.Jwt_service.dto.request.student.SearchAttendanceHistoryDto;
 import com.security.Jwt_service.dto.request.student.StudentCreateDto;
+import com.security.Jwt_service.dto.response.attend.SearchHistoryResponseDto;
+import com.security.Jwt_service.dto.response.student.StudentAttendanceHistoryResponseDto;
 import com.security.Jwt_service.dto.response.student.StudentResponseDto;
 import com.security.Jwt_service.service.StudentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -31,5 +35,9 @@ public class StudentController {
     @GetMapping
     public ResponseEntity<List<StudentResponseDto>> getAllStudent() throws IOException {
         return new ResponseEntity<>(studentService.getAllStudent(), HttpStatus.OK);
+    }
+    @GetMapping("/search")
+    public ResponseEntity<StudentAttendanceHistoryResponseDto> searchStudent(@Valid @RequestBody SearchAttendanceHistoryDto dto) {
+        return new ResponseEntity<>(studentService.searchStudent(dto), HttpStatus.OK);
     }
 }

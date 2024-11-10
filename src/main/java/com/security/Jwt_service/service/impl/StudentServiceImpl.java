@@ -1,13 +1,18 @@
 package com.security.Jwt_service.service.impl;
 
+import com.security.Jwt_service.dto.request.student.SearchAttendanceHistoryDto;
 import com.security.Jwt_service.dto.request.student.StudentCreateDto;
 import com.security.Jwt_service.dto.request.user.UserCreateDto;
+import com.security.Jwt_service.dto.response.attend.SearchHistoryResponseDto;
+import com.security.Jwt_service.dto.response.student.StudentAttendanceHistoryResponseDto;
 import com.security.Jwt_service.dto.response.student.StudentResponseDto;
 import com.security.Jwt_service.dto.response.user.UserResponseDto;
 import com.security.Jwt_service.dto.response.user.UserResponseFactory;
+import com.security.Jwt_service.entity.attendance.Attendance;
 import com.security.Jwt_service.entity.user.Role;
 import com.security.Jwt_service.entity.user.Student;
 import com.security.Jwt_service.entity.user.User;
+import com.security.Jwt_service.exception.AppApiException;
 import com.security.Jwt_service.exception.ResourceDuplicateException;
 import com.security.Jwt_service.exception.ResourceNotFoundException;
 import com.security.Jwt_service.mapper.student.StudentMapper;
@@ -23,6 +28,7 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -108,6 +114,30 @@ public class StudentServiceImpl implements StudentService, UserCreateMethod {
     @Override
     public List<StudentResponseDto> getAllStudent() {
         return studentRepository.findAll().stream().map(student -> studentMapper.entityToResponse(student)).toList();
+    }
+
+    @Override
+    public StudentAttendanceHistoryResponseDto searchStudent(SearchAttendanceHistoryDto searchDto) {
+        Student student=  studentRepository.findByCodeAndDate(searchDto.getStudentCode(), searchDto.getStartDate(),searchDto.getEndDate()).orElseThrow(
+                ()-> new AppApiException( HttpStatus.BAD_REQUEST,"Student History doesn't exists in this range time")
+        );
+        StudentAttendanceHistoryResponseDto responseDto= new StudentAttendanceHistoryResponseDto();
+        responseDto.setStudentName(student.getName());
+        responseDto.setStudentCode(student.getStudentCode());
+
+        List<SearchHistoryResponseDto>  history= new ArrayList<>();
+        for(Attendance attendance: student.getAttendances()){
+            SearchHistoryResponseDto searchHistory= SearchHistoryResponseDto.builder()
+                    .status(attendance.getStatus())
+                    .onClassTime(attendance.getOnClassTime())
+                    .startTime(attendance.getSession().getStartTime())
+                    .className(attendance.getSession().getClassroom().getName())
+                    .no(attendance.getSession().getNo())
+                    .build();
+            history.add(searchHistory);
+        }
+        responseDto.setHistory(history);
+        return responseDto;
     }
 
     @Override

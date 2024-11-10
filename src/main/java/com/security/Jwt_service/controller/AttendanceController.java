@@ -23,7 +23,7 @@ public class AttendanceController {
     private final AttendanceService attendanceService;
     @Operation(summary = "Add attendance", description = "API for add new attendance")
     @PostMapping("/{session_id}")
-    public ResponseEntity<AttendanceResponseDto> createCourse(Authentication authentication, @PathVariable(name = "session_id") Long id){
+    public ResponseEntity<AttendanceResponseDto> createAttendance(Authentication authentication, @PathVariable(name = "session_id") Long id){
         Long userId= ((CustomUserDetails) authentication.getPrincipal()).getId();
         return new ResponseEntity<>(attendanceService.attendStudent(id,userId), HttpStatus.CREATED);
     }
