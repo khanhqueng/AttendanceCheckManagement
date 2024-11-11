@@ -1,7 +1,8 @@
 package com.security.Jwt_service.config.security;
 
+import com.security.Jwt_service.exception.auth.CustomAccessDeniedHandler;
+import com.security.Jwt_service.exception.auth.JwtAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -9,7 +10,6 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -23,8 +23,6 @@ import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 
@@ -79,7 +77,8 @@ public class SecurityConfig {
                                         .anyRequest().authenticated();
                             }
                     )
-                    .exceptionHandling(exception-> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
+                    .exceptionHandling(exception-> exception.accessDeniedHandler(new CustomAccessDeniedHandler())
+                            .authenticationEntryPoint(jwtAuthenticationEntryPoint))
                     .sessionManagement(manager-> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                             .maximumSessions(1)
                     )

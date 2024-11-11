@@ -6,6 +6,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -74,7 +75,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                                                                     WebRequest webRequest){
         ErrorDetails errorDetails= new ErrorDetails(new Date(), exception.getMessage(),
                 webRequest.getDescription(false));
-        return new ResponseEntity<>(errorDetails,HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(errorDetails,HttpStatus.FORBIDDEN);
     }
     @ExceptionHandler(JwtValidateException.class)
     public ResponseEntity<ErrorDetails> handleTokenValidateException(JwtValidateException exception, WebRequest webRequest){
