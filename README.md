@@ -13,5 +13,5 @@ docker compose -f docker-compose.yml up -d mysql
 ```
 Run server
 ```
-docker compose -f docker-compose.yml up -d attendance
+docker compose -f docker-compose.yml up -d codebase
 ```
