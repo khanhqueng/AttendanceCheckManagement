@@ -20,6 +20,7 @@ import com.security.Jwt_service.repository.RoleRepository;
 import com.security.Jwt_service.repository.StudentRepository;
 import com.security.Jwt_service.service.StudentService;
 import com.security.Jwt_service.service.factorymethod.UserCreateMethod;
+import com.security.Jwt_service.service.redis.BaseRedisService;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -27,6 +28,8 @@ import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -41,14 +44,20 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @RequiredArgsConstructor
 @Service
 @Transactional
 public class StudentServiceImpl implements StudentService, UserCreateMethod {
+    private static final Logger log = LoggerFactory.getLogger(StudentServiceImpl.class);
     private final StudentRepository studentRepository;
     private final StudentMapper studentMapper;
     private final RoleRepository roleRepository;
+    private final BaseRedisService<String,String,String> redisTemplate;
+    private static int count=0;
+    private static AtomicInteger current=new AtomicInteger(0);
     @Autowired
     private PasswordEncoder passwordEncoder;
 //    @Override
@@ -138,6 +147,38 @@ public class StudentServiceImpl implements StudentService, UserCreateMethod {
         }
         responseDto.setHistory(history);
         return responseDto;
+    }
+
+    @Override
+    public String getAllStudentAdvance() {
+        current.incrementAndGet();
+        try{
+            log.info("Required Lock with current "+ current);
+            boolean isLocked= redisTemplate.acquireLock("Lock", "locked", 1,TimeUnit.SECONDS);
+            if(!isLocked){
+                log.info("WAIT STUDENT");
+                return "PLEASE WAIT";
+            }
+            log.info("current: "+ current);
+            String item= redisTemplate.get("Student-All");
+            if(item!=null){
+                log.info("FROM CACHE {}", item);
+                return item;
+            }
+            count++;
+            String saveCache= "Get all student in "+count+" times";
+            redisTemplate.set("Student-All", saveCache);
+            log.info(saveCache);
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            log.info("Release Lock with current : "+current);
+            redisTemplate.releaseLock("Lock");
+        }
+
+        return null;
     }
 
     @Override

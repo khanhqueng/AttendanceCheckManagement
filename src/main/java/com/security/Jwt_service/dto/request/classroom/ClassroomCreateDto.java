@@ -1,6 +1,7 @@
 package com.security.Jwt_service.dto.request.classroom;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.security.Jwt_service.validation.DateCheck;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -15,6 +16,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 
+@DateCheck(startDate = "beginDate", endDate = "endDate")
 public class ClassroomCreateDto {
     @NotNull(message = "name of classroom must not be null")
     private String name;

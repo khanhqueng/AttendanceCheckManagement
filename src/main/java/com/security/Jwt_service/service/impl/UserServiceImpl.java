@@ -72,8 +72,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserCreateMethod createUserMethod(UserCreateDto userCreateDto) {
-        if(userCreateDto.getRoleName().equals("Student")) return new StudentServiceImpl(studentRepository,studentMapper,roleRepository);
-        else if(userCreateDto.getRoleName().equals("Teacher")) return new TeacherServiceImpl(teacherRepository,roleRepository,teacherMapper);
+//        if(userCreateDto.getRoleName().equals("Student")) return new StudentServiceImpl(studentRepository,studentMapper,roleRepository);
+        if(userCreateDto.getRoleName().equals("Teacher")) return new TeacherServiceImpl(teacherRepository,roleRepository,teacherMapper);
         return null;
     }
 }
