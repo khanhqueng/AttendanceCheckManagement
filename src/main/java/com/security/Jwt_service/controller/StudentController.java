@@ -7,6 +7,7 @@ import com.security.Jwt_service.dto.response.student.StudentAttendanceHistoryRes
 import com.security.Jwt_service.dto.response.student.StudentResponseDto;
 import com.security.Jwt_service.service.StudentService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,12 +30,18 @@ public class StudentController {
             consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
+
     public ResponseEntity<List<StudentResponseDto>> importStudentThroughExcel(@RequestBody MultipartFile excelFile) throws IOException {
         return new ResponseEntity<>(studentService.addStudentThroughExcel(excelFile), HttpStatus.CREATED);
     }
+    @SecurityRequirement(name = "Authorization")
     @GetMapping
     public ResponseEntity<List<StudentResponseDto>> getAllStudent() throws IOException {
         return new ResponseEntity<>(studentService.getAllStudent(), HttpStatus.OK);
+    }
+    @GetMapping("/redis")
+    public ResponseEntity<String> getAllStudentAdvance() throws IOException {
+        return new ResponseEntity<>(studentService.getAllStudentAdvance(), HttpStatus.OK);
     }
     @GetMapping("/search")
     public ResponseEntity<StudentAttendanceHistoryResponseDto> searchStudent(@Valid @RequestBody SearchAttendanceHistoryDto dto) {

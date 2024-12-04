@@ -23,7 +23,7 @@ import java.util.List;
 public class TeacherController {
     private final TeacherService teacherService;
     @GetMapping
-    public ResponseEntity<List<TeacherResponseDto>> getAllStudent() throws IOException {
+    public ResponseEntity<List<TeacherResponseDto>> getAllTeacher() throws IOException {
         return new ResponseEntity<>(teacherService.getAllTeachers(), HttpStatus.OK);
     }
 
