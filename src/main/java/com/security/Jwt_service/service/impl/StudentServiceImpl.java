@@ -156,6 +156,7 @@ public class StudentServiceImpl implements StudentService, UserCreateMethod {
             log.info("Required Lock with current "+ current);
             boolean isLocked= redisTemplate.acquireLock("Lock", "locked", 1,TimeUnit.SECONDS);
             if(!isLocked){
+                // retry if lock key is used by other threads.
                 log.info("WAIT STUDENT");
                 return "PLEASE WAIT";
             }
