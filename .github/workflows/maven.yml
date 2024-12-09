@@ -42,46 +42,21 @@ jobs:
         context: .
         push: true
         tags: quangkhanh288/attendance-server:latest
-#  deploy:
-#    runs-on: ubuntu-latest
-#    needs: build
-#    steps:
-#        - name: executing remote ssh commands
-#          uses: appleboy/ssh-action@v1.1.0
-#          with:
-#            host: ${{ secrets.HOST }}
-#            username: ${{ secrets.USERNAME }}
-#            key: ${{ secrets.KEY }}
-#            port: ${{ secrets.PORT }}
-#            script_stop: true
-#            script: |
-
-#  deploy:
-#    name: Write Script to Remote Server
-#    runs-on: ubuntu-latest
-#    steps:
-#      # Step 1: Checkout the repository (if needed)
-#      - name: Checkout the repository
-#        uses: actions/checkout@v3
-#
-#      # Step 2: Set up SSH Agent to authenticate with the remote server
-#      - name: Start SSH Agent
-#        run: |
-#          eval "$(ssh-agent -s)"
-#          ssh-add /home/runner/.ssh/id_rsa # Adjust this path to your SSH key location
-#      - name: Create a script to pull Docker image
-#        run: |
-#            echo "#!/bin/bash" > script.ps1
-#            echo "docker pull quangkhanh288/attendance-server:latest" >> script.ps1
-#            chmod +x script.ps1
-#
-#      # Step 4: Copy the script to the remote server
-#      - name: Copy the script to the remote server
-#        run: |
-#          scp -o StrictHostKeyChecking=no script.ps1 'NITRO 5'@192.168.1.10:C:\Users\NITRO\ 5\remote-path\
-#
-#      # Step 5: Execute the script on the remote server
-#      - name: Execute the script on remote server
-#        run: |
-#          ssh -o StrictHostKeyChecking=no 'NITRO 5'@192.168.1.10 "powershell -ExecutionPolicy Bypass -File 'C:\Users\NITRO 5\remote-path\script.ps1'"
-
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+        - name: executing remote ssh commands
+          uses: appleboy/ssh-action@v1.1.0
+          with:
+            host: ${{ secrets.HOST }}
+            username: ${{ secrets.USERNAME }}
+            key: ${{ secrets.KEY }}
+            port: ${{ secrets.PORT }}
+            script_stop: true
+            script: |
+              docker-compose stop codebase
+              docker-compose rm -f codebase
+              docker-compose pull codebase
+              docker image prune -f
+              docker-compose up -d codebase
