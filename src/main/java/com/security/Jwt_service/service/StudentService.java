@@ -18,5 +18,5 @@ public interface StudentService {
     List<StudentResponseDto> addStudentThroughExcel(MultipartFile excelFile) throws IOException;
     List<StudentResponseDto> getAllStudent();
     StudentAttendanceHistoryResponseDto searchStudent(SearchAttendanceHistoryDto searchDto);
-    String getAllStudentAdvance();
+//    String getAllStudentAdvance();
 }

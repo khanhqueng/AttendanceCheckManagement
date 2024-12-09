@@ -55,7 +55,7 @@ public class StudentServiceImpl implements StudentService, UserCreateMethod {
     private final StudentRepository studentRepository;
     private final StudentMapper studentMapper;
     private final RoleRepository roleRepository;
-    private final BaseRedisService<String,String,String> redisTemplate;
+//    private final BaseRedisService<String,String,String> redisTemplate;
     private static int count=0;
     private static AtomicInteger current=new AtomicInteger(0);
     @Autowired
@@ -149,38 +149,38 @@ public class StudentServiceImpl implements StudentService, UserCreateMethod {
         return responseDto;
     }
 
-    @Override
-    public String getAllStudentAdvance() {
-        current.incrementAndGet();
-        try{
-            log.info("Required Lock with current "+ current);
-            boolean isLocked= redisTemplate.acquireLock("Lock", "locked", 1,TimeUnit.SECONDS);
-            if(!isLocked){
-                // retry if lock key is used by other threads.
-                log.info("WAIT STUDENT");
-                return "PLEASE WAIT";
-            }
-            log.info("current: "+ current);
-            String item= redisTemplate.get("Student-All");
-            if(item!=null){
-                log.info("FROM CACHE {}", item);
-                return item;
-            }
-            count++;
-            String saveCache= "Get all student in "+count+" times";
-            redisTemplate.set("Student-All", saveCache);
-            log.info(saveCache);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        finally {
-            log.info("Release Lock with current : "+current);
-            redisTemplate.releaseLock("Lock");
-        }
-
-        return null;
-    }
+//    @Override
+//    public String getAllStudentAdvance() {
+//        current.incrementAndGet();
+//        try{
+//            log.info("Required Lock with current "+ current);
+//            boolean isLocked= redisTemplate.acquireLock("Lock", "locked", 1,TimeUnit.SECONDS);
+//            if(!isLocked){
+//                // retry if lock key is used by other threads.
+//                log.info("WAIT STUDENT");
+//                return "PLEASE WAIT";
+//            }
+//            log.info("current: "+ current);
+//            String item= redisTemplate.get("Student-All");
+//            if(item!=null){
+//                log.info("FROM CACHE {}", item);
+//                return item;
+//            }
+//            count++;
+//            String saveCache= "Get all student in "+count+" times";
+//            redisTemplate.set("Student-All", saveCache);
+//            log.info(saveCache);
+//        }
+//        catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
+//        finally {
+//            log.info("Release Lock with current : "+current);
+//            redisTemplate.releaseLock("Lock");
+//        }
+//
+//        return null;
+//    }
 
     @Override
     public UserResponseFactory createUser(UserCreateDto userCreateDto) {
