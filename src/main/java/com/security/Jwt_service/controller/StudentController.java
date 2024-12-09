@@ -39,10 +39,10 @@ public class StudentController {
     public ResponseEntity<List<StudentResponseDto>> getAllStudent() throws IOException {
         return new ResponseEntity<>(studentService.getAllStudent(), HttpStatus.OK);
     }
-    @GetMapping("/redis")
-    public ResponseEntity<String> getAllStudentAdvance() throws IOException {
-        return new ResponseEntity<>(studentService.getAllStudentAdvance(), HttpStatus.OK);
-    }
+//    @GetMapping("/redis")
+//    public ResponseEntity<String> getAllStudentAdvance() throws IOException {
+//        return new ResponseEntity<>(studentService.getAllStudentAdvance(), HttpStatus.OK);
+//    }
     @GetMapping("/search")
     public ResponseEntity<StudentAttendanceHistoryResponseDto> searchStudent(@Valid @RequestBody SearchAttendanceHistoryDto dto) {
         return new ResponseEntity<>(studentService.searchStudent(dto), HttpStatus.OK);

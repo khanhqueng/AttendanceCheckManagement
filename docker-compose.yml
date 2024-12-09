@@ -7,6 +7,10 @@ services:
     image: quangkhanh288/attendance-server
     restart: unless-stopped
     environment:
+      DB_HOST:
+      DB_PORT:
+      DB_USER:
+      DB_PASS:
       SPRING_PROFILES_ACTIVE: prod
     ports:
       - 8000:8000
