@@ -38,7 +38,6 @@ public class UserController {
     public ResponseEntity<UserResponseDto> changeRoleUser( @PathVariable(name = "id") Long userId, @RequestParam(name = "role_name") String roleName ){
         return new ResponseEntity<>(userService.changeRole(userId,roleName), HttpStatus.OK);
     }
-
     @PostMapping
     public ResponseEntity<UserResponseFactory> createUser(@RequestBody @Valid  UserCreateDto createDto){
         UserCreateMethod userCreateMethod= userService.createUserMethod(createDto);
