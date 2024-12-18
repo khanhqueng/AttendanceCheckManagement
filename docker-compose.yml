@@ -11,6 +11,8 @@ services:
       DB_PORT:
       DB_USER:
       DB_PASS:
+      MAIL_USERNAME:
+      MAIL_PASSWORD:
       SPRING_PROFILES_ACTIVE: prod
     ports:
       - 8000:8000

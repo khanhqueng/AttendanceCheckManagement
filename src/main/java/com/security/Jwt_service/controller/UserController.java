@@ -2,6 +2,8 @@ package com.security.Jwt_service.controller;
 
 import com.security.Jwt_service.config.security.CustomUserDetails;
 import com.security.Jwt_service.dto.request.user.UserCreateDto;
+import com.security.Jwt_service.dto.request.user.UserUpdatePasswordDto;
+import com.security.Jwt_service.dto.request.user.UserUpdateVerify;
 import com.security.Jwt_service.dto.response.user.UserResponseDto;
 import com.security.Jwt_service.dto.response.user.UserResponseFactory;
 import com.security.Jwt_service.service.UserService;
@@ -14,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/user")
@@ -42,6 +46,14 @@ public class UserController {
     public ResponseEntity<UserResponseFactory> createUser(@RequestBody @Valid  UserCreateDto createDto){
         UserCreateMethod userCreateMethod= userService.createUserMethod(createDto);
         return new ResponseEntity<>(userCreateMethod.createUser(createDto), HttpStatus.CREATED);
+    }
+    @PostMapping("/update-password/code")
+    public ResponseEntity<CompletableFuture<String>> createCode(@RequestBody @Valid UserUpdatePasswordDto updatePasswordDto){
+        return new ResponseEntity<>(userService.genCodeForChangePassword(updatePasswordDto), HttpStatus.OK);
+    }
+    @PutMapping("/update-password")
+    public ResponseEntity<UserResponseDto> updatePassword(@RequestBody @Valid UserUpdateVerify updateVerify){
+        return new ResponseEntity<>(userService.changePassword(updateVerify), HttpStatus.OK);
     }
 
 }

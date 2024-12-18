@@ -35,6 +35,7 @@ public class JwtServiceImpl implements JwtService {
         Date expireTime= new Date(currentTime.getTime()+1000*60*expiryMinutes);
         return Jwts.builder()
                 .subject(Long.toString(userDetails.getId()))
+                .claim("role", userDetails.getAuthorities())
                 .issuedAt(new Date())
                 .expiration(expireTime)
                 .signWith(key(ACCESS_TOKEN))
