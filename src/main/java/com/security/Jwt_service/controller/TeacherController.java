@@ -22,6 +22,7 @@ import java.util.List;
 @Tag(name = "Teacher Controller")
 public class TeacherController {
     private final TeacherService teacherService;
+    @Operation(summary = "Get all teacher", description = "API for get all teacher")
     @GetMapping
     public ResponseEntity<List<TeacherResponseDto>> getAllTeacher() throws IOException {
         return new ResponseEntity<>(teacherService.getAllTeachers(), HttpStatus.OK);

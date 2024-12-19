@@ -26,14 +26,15 @@ import java.util.List;
 @Tag(name = "Student Controller")
 public class StudentController {
     private final StudentService studentService;
+    @Operation(summary = "Add student through excel file", description = "API for add student through excel file")
     @PostMapping(value = "/import",
             consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-
     public ResponseEntity<List<StudentResponseDto>> importStudentThroughExcel(@RequestBody MultipartFile excelFile) throws IOException {
         return new ResponseEntity<>(studentService.addStudentThroughExcel(excelFile), HttpStatus.CREATED);
     }
+    @Operation(summary = "Get all student", description = "API for get all student")
     @SecurityRequirement(name = "Authorization")
     @GetMapping
     public ResponseEntity<List<StudentResponseDto>> getAllStudent() throws IOException {
@@ -43,6 +44,7 @@ public class StudentController {
 //    public ResponseEntity<String> getAllStudentAdvance() throws IOException {
 //        return new ResponseEntity<>(studentService.getAllStudentAdvance(), HttpStatus.OK);
 //    }
+@Operation(summary = "Search attendance history by start date, end date and student code", description = "API for search attendance history")
     @GetMapping("/search")
     public ResponseEntity<StudentAttendanceHistoryResponseDto> searchStudent(@Valid @RequestBody SearchAttendanceHistoryDto dto) {
         return new ResponseEntity<>(studentService.searchStudent(dto), HttpStatus.OK);

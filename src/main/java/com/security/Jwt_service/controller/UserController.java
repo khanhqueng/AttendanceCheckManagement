@@ -25,13 +25,13 @@ import java.util.concurrent.CompletableFuture;
 @Tag(name = "User Controller")
 public class UserController {
     private final UserService userService;
-    @Operation(summary = "Get user by id", description = "API for get user by id")
+    @Operation(summary = "Get user by its id (id is store in token when login)", description = "API for get user by its id")
     @GetMapping
     public ResponseEntity<UserResponseDto> getUser(Authentication authentication){
         Long userId= ((CustomUserDetails ) authentication.getPrincipal()).getId();
         return new ResponseEntity<>(userService.getUserById(userId), HttpStatus.OK);
     }
-    @Operation(summary = "Update user", description = "API for update existing user")
+    @Operation(summary = "Update user email", description = "API for update email of user")
     @PutMapping
     public ResponseEntity<UserResponseDto> updateUser(Authentication authentication, @RequestParam(name = "email") String email){
         Long userId= ((CustomUserDetails ) authentication.getPrincipal()).getId();
@@ -42,15 +42,18 @@ public class UserController {
     public ResponseEntity<UserResponseDto> changeRoleUser( @PathVariable(name = "id") Long userId, @RequestParam(name = "role_name") String roleName ){
         return new ResponseEntity<>(userService.changeRole(userId,roleName), HttpStatus.OK);
     }
+    @Operation(summary = "Create user by role-name ( Student or Teacher )", description = "API for create user by their role")
     @PostMapping
     public ResponseEntity<UserResponseFactory> createUser(@RequestBody @Valid  UserCreateDto createDto){
         UserCreateMethod userCreateMethod= userService.createUserMethod(createDto);
         return new ResponseEntity<>(userCreateMethod.createUser(createDto), HttpStatus.CREATED);
     }
+    @Operation(summary = "Generate code to reset password", description = "API for generate reset code")
     @PostMapping("/update-password/code")
     public ResponseEntity<CompletableFuture<String>> createCode(@RequestBody @Valid UserUpdatePasswordDto updatePasswordDto){
         return new ResponseEntity<>(userService.genCodeForChangePassword(updatePasswordDto), HttpStatus.OK);
     }
+    @Operation(summary = "Update password with code", description = "API for update password with code generated")
     @PutMapping("/update-password")
     public ResponseEntity<UserResponseDto> updatePassword(@RequestBody @Valid UserUpdateVerify updateVerify){
         return new ResponseEntity<>(userService.changePassword(updateVerify), HttpStatus.OK);

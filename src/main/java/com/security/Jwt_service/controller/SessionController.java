@@ -19,11 +19,12 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Session Controller")
 public class SessionController {
     private final SessionService sessionService;
-    @Operation(summary = "Add batch of sessions", description = "API for create batch of sessions")
+    @Operation(summary = "Add batch of sessions (the first session is start according to the start time of its class", description = "API for add batch session")
     @PostMapping("/{frequency}")
     public ResponseEntity<SessionResponseCreateDto> createSessions(@RequestBody SessionCreateDto dto, @PathVariable(name = "frequency") int frequency){
         return new ResponseEntity<>(sessionService.createSessions(dto,frequency), HttpStatus.CREATED);
     }
+    @Operation(summary = "Delete session", description = "API for delete session")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteSession(@PathVariable(name = "id") Long id){
         sessionService.deleteSession(id);

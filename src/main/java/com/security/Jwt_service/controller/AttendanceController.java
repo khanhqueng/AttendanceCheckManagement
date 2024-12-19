@@ -21,7 +21,7 @@ import java.util.List;
 @Tag(name = "Attendance Controller")
 public class AttendanceController {
     private final AttendanceService attendanceService;
-    @Operation(summary = "Add attendance", description = "API for add new attendance")
+    @Operation(summary = "Add attendance ( Only authenticated student) ", description = "API for add new attendance")
     @PostMapping("/{session_id}")
     public ResponseEntity<AttendanceResponseDto> createAttendance(Authentication authentication, @PathVariable(name = "session_id") Long id){
         Long userId= ((CustomUserDetails) authentication.getPrincipal()).getId();
@@ -39,7 +39,7 @@ public class AttendanceController {
         Long userId= ((CustomUserDetails) authentication.getPrincipal()).getId();
         return new ResponseEntity<>(attendanceService.getAllAttendanceByStudentId(userId), HttpStatus.OK);
     }
-    @Operation(summary = "Update absent student", description = "API for update absent student")
+    @Operation(summary = "Get all attendances in a session", description = "API for get attendances in a session")
     @GetMapping("/{session_id}")
     public ResponseEntity<List<AttendanceResponseDto>> getAllAttendanceBySessionId(@PathVariable(name = "session_id") Long id){
         return new ResponseEntity<>(attendanceService.getAttendanceBySessionId(id), HttpStatus.OK);
