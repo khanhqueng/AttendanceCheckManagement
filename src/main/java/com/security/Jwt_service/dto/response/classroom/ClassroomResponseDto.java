@@ -2,8 +2,10 @@ package com.security.Jwt_service.dto.response.classroom;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.security.Jwt_service.dto.response.course.CourseResponseDto;
+import com.security.Jwt_service.dto.response.session.SessionResponseDto;
 import com.security.Jwt_service.dto.response.student.StudentResponseDto;
 import com.security.Jwt_service.dto.response.teacher.TeacherResponseDto;
+import com.security.Jwt_service.entity.session.Session;
 import com.security.Jwt_service.entity.user.Student;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -34,4 +36,5 @@ public class ClassroomResponseDto {
     private TeacherResponseDto teacher;
 
     private Set<StudentResponseDto> students;
+    private Set<SessionResponseDto> sessions;
 }

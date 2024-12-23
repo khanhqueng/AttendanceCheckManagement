@@ -34,4 +34,10 @@ public class ClassroomController {
     public ResponseEntity<List<ClassroomResponseDto>> getAllClassrooms(){
         return new ResponseEntity<>(classroomService.getAllClassrooms(), HttpStatus.OK);
     }
+    @Operation(summary = "Get classroom by id", description = "API for get classroom by id")
+    @GetMapping("/{id}")
+    public ResponseEntity<ClassroomResponseDto> getClassroomById(@PathVariable(name = "id") Long id){
+        return new ResponseEntity<>(classroomService.getClassroomById(id), HttpStatus.OK);
+    }
+
 }

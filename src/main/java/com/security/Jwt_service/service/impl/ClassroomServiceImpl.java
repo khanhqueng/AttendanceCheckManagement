@@ -49,4 +49,12 @@ public class ClassroomServiceImpl implements ClassroomService {
     public List<ClassroomResponseDto> getAllClassrooms() {
         return classroomRepository.findAll().stream().map(classroomMapper::entityToResponse).toList();
     }
+
+    @Override
+    public ClassroomResponseDto getClassroomById(Long id) {
+        Classroom classroom = classroomRepository.findById(id).orElseThrow(
+                ()-> new ResourceNotFoundException("Classroom", "id", id)
+        );
+        return classroomMapper.entityToResponse(classroom);
+    }
 }
