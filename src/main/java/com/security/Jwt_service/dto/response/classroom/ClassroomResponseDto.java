@@ -20,6 +20,7 @@ import java.util.Set;
 @AllArgsConstructor
 
 public class ClassroomResponseDto {
+    private Long id;
     private String name;
 
     private LocalDate beginDate;

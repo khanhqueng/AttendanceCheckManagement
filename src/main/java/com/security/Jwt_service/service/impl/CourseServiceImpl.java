@@ -10,6 +10,8 @@ import com.security.Jwt_service.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class CourseServiceImpl implements CourseService {
@@ -22,5 +24,10 @@ public class CourseServiceImpl implements CourseService {
         }
         Course course = courseMapper.requestToEntity(createDto);
         return courseMapper.entityToResponse(courseRepository.save(course));
+    }
+
+    @Override
+    public List<CourseResponseDto> getAllCourses() {
+        return courseRepository.findAll().stream().map(courseMapper::entityToResponse).toList();
     }
 }

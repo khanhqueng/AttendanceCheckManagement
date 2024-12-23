@@ -26,4 +26,9 @@ public class CourseController {
     public ResponseEntity<CourseResponseDto> createCourse(@RequestBody CourseCreateDto dto){
         return new ResponseEntity<>(courseService.createCourse(dto), HttpStatus.CREATED);
     }
+    @Operation(summary = "Get all courses", description = "API for get all courses")
+    @GetMapping
+    public ResponseEntity<List<CourseResponseDto>> getAllCourses(){
+        return new ResponseEntity<>(courseService.getAllCourses(), HttpStatus.OK);
+    }
 }

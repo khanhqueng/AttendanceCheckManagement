@@ -5,6 +5,7 @@ import com.security.Jwt_service.exception.auth.JwtAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -71,7 +72,8 @@ public class SecurityConfig {
                                         .requestMatchers("/student/**").permitAll()
                                         .requestMatchers("/course/**").permitAll()
                                         .requestMatchers("/teacher/**").permitAll()
-                                        .requestMatchers("/classroom/**").hasAuthority("TEACHER")
+                                        .requestMatchers("/classroom/**").permitAll()
+                                        .requestMatchers(HttpMethod.POST, "/classroom/**").hasAuthority("TEACHER")
                                         .requestMatchers("/user/**").permitAll()
                                         .requestMatchers("/session/**").permitAll()
                                         .anyRequest().authenticated();

@@ -44,4 +44,9 @@ public class ClassroomServiceImpl implements ClassroomService {
         classroom.setCourse(course);
         return classroomMapper.entityToResponse(classroomRepository.save(classroom));
     }
+
+    @Override
+    public List<ClassroomResponseDto> getAllClassrooms() {
+        return classroomRepository.findAll().stream().map(classroomMapper::entityToResponse).toList();
+    }
 }

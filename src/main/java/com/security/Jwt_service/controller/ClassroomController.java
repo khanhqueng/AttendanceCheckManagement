@@ -3,6 +3,7 @@ package com.security.Jwt_service.controller;
 import com.security.Jwt_service.dto.request.classroom.ClassroomCreateDto;
 import com.security.Jwt_service.dto.request.student.StudentCreateDto;
 import com.security.Jwt_service.dto.response.classroom.ClassroomResponseDto;
+import com.security.Jwt_service.dto.response.course.CourseResponseDto;
 import com.security.Jwt_service.dto.response.student.StudentResponseDto;
 import com.security.Jwt_service.service.ClassroomService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,5 +28,10 @@ public class ClassroomController {
                                                                 @RequestParam(name = "teacher") Long teacherId,
                                                                 @RequestParam(name = "course") Long courseId){
         return new ResponseEntity<>(classroomService.createClassroom(dto, studentId, teacherId, courseId), HttpStatus.CREATED);
+    }
+    @Operation(summary = "Get all classrooms", description = "API for get all classrooms")
+    @GetMapping
+    public ResponseEntity<List<ClassroomResponseDto>> getAllClassrooms(){
+        return new ResponseEntity<>(classroomService.getAllClassrooms(), HttpStatus.OK);
     }
 }

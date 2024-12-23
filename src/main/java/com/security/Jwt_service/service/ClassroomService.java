@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface ClassroomService {
     ClassroomResponseDto createClassroom(ClassroomCreateDto createDto, List<Long> studentIds, Long teacherId, Long courseId);
+    List<ClassroomResponseDto> getAllClassrooms();
+
 }

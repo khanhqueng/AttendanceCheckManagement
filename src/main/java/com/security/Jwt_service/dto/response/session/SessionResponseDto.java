@@ -15,8 +15,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 
 public class SessionResponseDto {
+    private Long id;
     private int no;
-
     private LocalDateTime startTime;
     private LocalDateTime endTime;
 }
