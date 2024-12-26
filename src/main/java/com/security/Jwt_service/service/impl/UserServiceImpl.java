@@ -89,7 +89,7 @@ public class UserServiceImpl implements UserService {
     public UserCreateMethod createUserMethod(UserCreateDto userCreateDto) {
         if(userCreateDto.getRoleName().equals("Student")) return new StudentServiceImpl(studentRepository,studentMapper,roleRepository);
         if(userCreateDto.getRoleName().equals("Teacher")) return new TeacherServiceImpl(teacherRepository,roleRepository,teacherMapper);
-        return null;
+        throw new AppApiException(HttpStatus.BAD_REQUEST,"Invalid role");
     }
 
     @Override
