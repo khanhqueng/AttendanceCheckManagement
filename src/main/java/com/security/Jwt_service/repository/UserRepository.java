@@ -17,4 +17,5 @@ public interface UserRepository extends JpaRepository<User,Long> {
             "WHERE u.username = :username " +
             "AND (s.email = :email OR t.email = :email OR m.email = :email)")
     Optional<User> findUserByUsernameAndEmail(@Param("username") String username, @Param("email") String email);
+
 }

@@ -26,10 +26,9 @@ import java.util.concurrent.CompletableFuture;
 public class UserController {
     private final UserService userService;
     @Operation(summary = "Get user by its id (id is store in token when login)", description = "API for get user by its id")
-    @GetMapping
-    public ResponseEntity<UserResponseDto> getUser(Authentication authentication){
-        Long userId= ((CustomUserDetails ) authentication.getPrincipal()).getId();
-        return new ResponseEntity<>(userService.getUserById(userId), HttpStatus.OK);
+    @GetMapping("/{user_id}")
+    public ResponseEntity<UserResponseDto> getUser(@PathVariable(name = "user_id") Long id){
+        return new ResponseEntity<>(userService.getUserById(id), HttpStatus.OK);
     }
     @Operation(summary = "Update user email", description = "API for update email of user")
     @PutMapping

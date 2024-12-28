@@ -5,6 +5,8 @@ import com.security.Jwt_service.dto.request.user.UserUpdatePasswordDto;
 import com.security.Jwt_service.dto.request.user.UserUpdateVerify;
 import com.security.Jwt_service.dto.response.user.UserResponseDto;
 import com.security.Jwt_service.entity.user.Role;
+import com.security.Jwt_service.entity.user.Student;
+import com.security.Jwt_service.entity.user.Teacher;
 import com.security.Jwt_service.entity.user.User;
 import com.security.Jwt_service.exception.AppApiException;
 import com.security.Jwt_service.exception.ResourceDuplicateException;
@@ -66,7 +68,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto getUserById(Long userId) {
         User user= userRepository.findById(userId).orElseThrow(()-> new ResourceNotFoundException("user", "id", userId));
-        return userMapper.entityToResponse(user);
+        UserResponseDto response= userMapper.entityToResponse(user);
+        if(user.getStudent()!=null){
+            Student student = user.getStudent();
+            response.setName(student.getName());
+            response.setDob(student.getDate());
+            response.setPhoneNumber(student.getPhoneNumber());
+            response.setRoleCode(student.getStudentCode());
+        }
+        else if(user.getTeacher()!=null){
+            Teacher teacher = user.getTeacher();
+            response.setName(teacher.getName());
+            response.setDob(teacher.getDate());
+            response.setPhoneNumber(teacher.getPhoneNumber());
+            response.setRoleCode(teacher.getTeacherCode());
+        }
+        return response;
     }
 
     @Override
