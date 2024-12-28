@@ -6,7 +6,6 @@ import com.security.Jwt_service.dto.request.user.UserUpdateVerify;
 import com.security.Jwt_service.dto.response.user.UserResponseDto;
 import com.security.Jwt_service.entity.user.*;
 import com.security.Jwt_service.exception.AppApiException;
-import com.security.Jwt_service.exception.ResourceDuplicateException;
 import com.security.Jwt_service.exception.ResourceNotFoundException;
 import com.security.Jwt_service.mapper.student.StudentMapper;
 import com.security.Jwt_service.mapper.teacher.TeacherMapper;
@@ -15,7 +14,6 @@ import com.security.Jwt_service.repository.RoleRepository;
 import com.security.Jwt_service.repository.StudentRepository;
 import com.security.Jwt_service.repository.TeacherRepository;
 import com.security.Jwt_service.repository.UserRepository;
-import com.security.Jwt_service.service.StudentService;
 import com.security.Jwt_service.service.UserService;
 import com.security.Jwt_service.service.factorymethod.UserCreateMethod;
 import com.security.Jwt_service.service.redis.BaseRedisService;
@@ -114,8 +112,8 @@ public class UserServiceImpl implements UserService {
     @Override
     @Async
     public CompletableFuture<String> genCodeForChangePassword(UserUpdatePasswordDto updatePasswordDto) {
-        User user = userRepository.findUserByUsernameAndEmail(updatePasswordDto.getUsername(),updatePasswordDto.getEmail()).orElseThrow(
-                ()-> new ResourceNotFoundException("User", "username or email", updatePasswordDto.getUsername()+" "+updatePasswordDto.getEmail())
+        User user = userRepository.findUserByEmail(updatePasswordDto.getEmail()).orElseThrow(
+                ()-> new ResourceNotFoundException("User", "email", updatePasswordDto.getEmail())
         );
         Random random = new Random();
         String randomString = random.ints(4, 0, 10)
@@ -123,8 +121,8 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.joining());
         CompletableFuture<Void> redisTask = CompletableFuture.runAsync(
                 ()->{
-                    redisTemplate.set(updatePasswordDto.getUsername(), randomString);
-                    redisTemplate.setTimeToLive(updatePasswordDto.getUsername(),5);
+                    redisTemplate.set(updatePasswordDto.getEmail(), randomString);
+                    redisTemplate.setTimeToLive(updatePasswordDto.getEmail(),5);
                 }
         );
         CompletableFuture<Void> sendMailTask= CompletableFuture.runAsync(
@@ -141,17 +139,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto changePassword(UserUpdateVerify updateVerify) {
-        String verifyCode= redisTemplate.get(updateVerify.getUsername());
-        if(verifyCode==null) throw new AppApiException(HttpStatus.BAD_REQUEST,"Username not correct or code is expired");
-        if(!verifyCode.equals(updateVerify.getCode()))
-            throw new AppApiException(HttpStatus.BAD_REQUEST, "Code is not correct");
-        User user = userRepository.findByUsername(updateVerify.getUsername()).orElseThrow(
-                ()-> new ResourceNotFoundException("user", "username", updateVerify.getUsername())
+
+        User user = userRepository.findUserByEmail(updateVerify.getEmail()).orElseThrow(
+                ()-> new ResourceNotFoundException("user", "email", updateVerify.getEmail())
         );
         passwordEncoder= new BCryptPasswordEncoder();
         if(passwordEncoder.matches(updateVerify.getNewPassword(), user.getPassword()))
             throw new AppApiException(HttpStatus.BAD_REQUEST,"New password is same as old password");
         user.setPassword(passwordEncoder.encode(updateVerify.getNewPassword()));
         return userMapper.entityToResponse(userRepository.save(user));
+    }
+
+    @Override
+    public Boolean verifyCode(UserUpdatePasswordDto updatePasswordDto, String code) {
+        String verifyCode= redisTemplate.get(updatePasswordDto.getEmail());
+        if(verifyCode==null) throw new AppApiException(HttpStatus.BAD_REQUEST,"Email not correct or code is expired");
+        if(!verifyCode.equals(code))
+            return false;
+        return true;
     }
 }

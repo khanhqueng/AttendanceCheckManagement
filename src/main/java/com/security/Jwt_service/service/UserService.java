@@ -16,4 +16,5 @@ public interface UserService {
     UserCreateMethod createUserMethod(UserCreateDto userCreateDto);
     CompletableFuture<String> genCodeForChangePassword(UserUpdatePasswordDto updatePasswordDto);
     UserResponseDto changePassword(UserUpdateVerify updateVerify);
+    Boolean verifyCode(UserUpdatePasswordDto updatePasswordDto, String code);
 }

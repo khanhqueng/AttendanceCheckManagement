@@ -57,5 +57,11 @@ public class UserController {
     public ResponseEntity<UserResponseDto> updatePassword(@RequestBody @Valid UserUpdateVerify updateVerify){
         return new ResponseEntity<>(userService.changePassword(updateVerify), HttpStatus.OK);
     }
-
+    @Operation(summary = "Verify code", description = "API for verify code")
+    @PostMapping("/update-password/verify-code/{code}")
+    public ResponseEntity<String> verifyCode(@RequestBody @Valid UserUpdatePasswordDto dto,@PathVariable(name = "code") String code ){
+        return userService.verifyCode(dto, code)
+                ? new ResponseEntity<>("Code is verified", HttpStatus.OK)
+                : new ResponseEntity<>("Code is incorrect", HttpStatus.BAD_REQUEST);
+    }
 }

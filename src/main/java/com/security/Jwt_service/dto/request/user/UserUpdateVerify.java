@@ -10,7 +10,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserUpdateVerify {
-    private String username;
-    private String code;
+    private String email;
     private String newPassword;
 }
