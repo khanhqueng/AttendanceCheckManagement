@@ -4,10 +4,7 @@ import com.security.Jwt_service.dto.request.user.UserCreateDto;
 import com.security.Jwt_service.dto.request.user.UserUpdatePasswordDto;
 import com.security.Jwt_service.dto.request.user.UserUpdateVerify;
 import com.security.Jwt_service.dto.response.user.UserResponseDto;
-import com.security.Jwt_service.entity.user.Role;
-import com.security.Jwt_service.entity.user.Student;
-import com.security.Jwt_service.entity.user.Teacher;
-import com.security.Jwt_service.entity.user.User;
+import com.security.Jwt_service.entity.user.*;
 import com.security.Jwt_service.exception.AppApiException;
 import com.security.Jwt_service.exception.ResourceDuplicateException;
 import com.security.Jwt_service.exception.ResourceNotFoundException;
@@ -82,6 +79,11 @@ public class UserServiceImpl implements UserService {
             response.setDob(teacher.getDate());
             response.setPhoneNumber(teacher.getPhoneNumber());
             response.setRoleCode(teacher.getTeacherCode());
+        } else if (user.getManager()!=null) {
+            Manager manager= user.getManager();
+            response.setName(manager.getName());
+            response.setDob(manager.getDate());
+            response.setPhoneNumber(manager.getPhoneNumber());
         }
         return response;
     }
