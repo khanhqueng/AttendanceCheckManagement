@@ -56,6 +56,7 @@ public class SessionServiceImpl implements SessionService {
                             createDto.getEndClassTime().getMinute()
                     ).plusDays((long) (i - 1) * frequency));
             session.setNo(i);
+            session.setIsOver(0);
             sessions.add(sessionMapper.entityToResponse( sessionRepository.save(session)));
         }
         responseDto.setSessions(sessions);
