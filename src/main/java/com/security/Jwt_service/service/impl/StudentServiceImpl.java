@@ -126,8 +126,8 @@ public class StudentServiceImpl implements StudentService, UserCreateMethod {
     }
 
     @Override
-    public StudentAttendanceHistoryResponseDto searchStudent(SearchAttendanceHistoryDto searchDto) {
-        Student student=  studentRepository.findByCodeAndDate(searchDto.getStudentCode(), searchDto.getStartDate(),searchDto.getEndDate()).orElseThrow(
+    public StudentAttendanceHistoryResponseDto searchStudent(String studentCode, LocalDate startDate, LocalDate endDate) {
+        Student student=  studentRepository.findByCodeAndDate(studentCode, startDate,endDate).orElseThrow(
                 ()-> new AppApiException( HttpStatus.BAD_REQUEST,"Student History doesn't exists in this range time")
         );
         StudentAttendanceHistoryResponseDto responseDto= new StudentAttendanceHistoryResponseDto();

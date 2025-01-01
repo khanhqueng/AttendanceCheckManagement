@@ -1,6 +1,7 @@
 package com.security.Jwt_service.service.impl;
 
 import com.security.Jwt_service.dto.request.session.SessionCreateDto;
+import com.security.Jwt_service.dto.request.session.SessionUpdateDto;
 import com.security.Jwt_service.dto.response.session.SessionResponseCreateDto;
 import com.security.Jwt_service.dto.response.session.SessionResponseDto;
 import com.security.Jwt_service.entity.attendance.Attendance;
@@ -64,6 +65,14 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
+    public List<SessionResponseDto> updateSession(SessionUpdateDto updateDto) {
+        List<Long> sessionIds= updateDto.getSessionIds();
+        List<Session> sessions = sessionRepository.findAllById(sessionIds);
+        sessions.forEach(session -> session.setStartTime(updateDto.getStartTime()));
+        return sessionRepository.saveAll(sessions).stream().map(sessionMapper::entityToResponse).toList();
+    }
+
+    @Override
     public void deleteSession(Long sessionId) {
         Session session= sessionRepository.findById(sessionId).orElseThrow(
                 ()-> new ResourceNotFoundException("Session", "id", sessionId)
@@ -83,6 +92,7 @@ public class SessionServiceImpl implements SessionService {
 
                 if(session.getEndTime().isBefore(now)){
                     session.setIsOver(1);
+
                     Set<Student> allStudentsAtSession= session.getClassroom().getStudents();
                     Set<Student> attendances = session.getAttendances().stream().map(Attendance::getStudent).collect(Collectors.toSet());
                     for(Student student: allStudentsAtSession){

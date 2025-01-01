@@ -3,6 +3,7 @@ package com.security.Jwt_service.controller;
 
 import com.security.Jwt_service.dto.request.classroom.ClassroomCreateDto;
 import com.security.Jwt_service.dto.request.course.CourseCreateDto;
+import com.security.Jwt_service.dto.request.course.CourseUpdateDto;
 import com.security.Jwt_service.dto.response.classroom.ClassroomResponseDto;
 import com.security.Jwt_service.dto.response.course.CourseResponseDto;
 import com.security.Jwt_service.service.CourseService;
@@ -30,5 +31,10 @@ public class CourseController {
     @GetMapping
     public ResponseEntity<List<CourseResponseDto>> getAllCourses(){
         return new ResponseEntity<>(courseService.getAllCourses(), HttpStatus.OK);
+    }
+    @Operation(summary = "Update course", description = "API for update course")
+    @PutMapping("/{courseId}")
+    public ResponseEntity<CourseResponseDto> updateCourse(@RequestBody CourseUpdateDto updateDto, @PathVariable(name = "courseId") Long courseId){
+        return new ResponseEntity<>(courseService.updateCourse(courseId,updateDto), HttpStatus.OK);
     }
 }

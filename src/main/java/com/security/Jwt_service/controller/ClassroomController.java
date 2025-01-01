@@ -55,7 +55,10 @@ public class ClassroomController {
         Long userId= ((CustomUserDetails) authentication.getPrincipal()).getId();
         return new ResponseEntity<>(classroomService.getClassroomCanRollCall(userId), HttpStatus.OK);
     }
-
-
-
+    @Operation(summary = "Add a student to a classroom", description = "API for add a student to a classroom")
+    @PutMapping("/{classId}/{studentId}")
+    public ResponseEntity<ClassroomResponseDto> addStudentToClass(@PathVariable(name = "classId") Long classId,
+                                                                  @PathVariable(name = "studentId") Long studentId){
+        return new ResponseEntity<>(classroomService.addStudentToClass(classId, studentId), HttpStatus.OK);
+    }
 }

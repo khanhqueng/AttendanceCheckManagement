@@ -44,5 +44,11 @@ public class AttendanceController {
     public ResponseEntity<List<AttendanceResponseDto>> getAllAttendanceBySessionId(@PathVariable(name = "session_id") Long id){
         return new ResponseEntity<>(attendanceService.getAttendanceBySessionId(id), HttpStatus.OK);
     }
+    @Operation(summary = "Delete all attendances", description = "API for delete all attendances")
+    @DeleteMapping("/all")
+    public ResponseEntity<String> deleteAllAttendances(){
+        attendanceService.deleteALlAttendance();
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
 
 }

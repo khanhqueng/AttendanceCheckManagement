@@ -9,4 +9,5 @@ public interface AttendanceService {
     AttendanceResponseDto updateAbsentStudent(Long sessionId, Long userId);
     List<AttendanceResponseDto> getAllAttendanceByStudentId(Long studentId);
     List<AttendanceResponseDto> getAttendanceBySessionId(Long sessionId);
+    void deleteALlAttendance();
 }

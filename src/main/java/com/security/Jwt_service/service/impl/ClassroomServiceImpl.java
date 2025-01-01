@@ -3,6 +3,7 @@ package com.security.Jwt_service.service.impl;
 import com.security.Jwt_service.dto.request.classroom.ClassroomCreateDto;
 import com.security.Jwt_service.dto.response.classroom.ClassroomForRollCaller;
 import com.security.Jwt_service.dto.response.classroom.ClassroomResponseDto;
+import com.security.Jwt_service.dto.response.course.CourseResponseDto;
 import com.security.Jwt_service.entity.classroom.Classroom;
 import com.security.Jwt_service.entity.course.Course;
 import com.security.Jwt_service.entity.session.Session;
@@ -97,5 +98,18 @@ public class ClassroomServiceImpl implements ClassroomService {
             response.add(classroomForRollCaller);
         }
         return response;
+    }
+
+    @Override
+    public ClassroomResponseDto addStudentToClass(Long classId, Long studentId) {
+        Classroom classroom = classroomRepository.findById(classId).orElseThrow(
+                ()-> new ResourceNotFoundException("Classroom", "id", classId)
+        );
+        Student student = studentRepository.findById(studentId).orElseThrow(
+                ()-> new ResourceNotFoundException("Student", "id", studentId)
+        );
+        if(classroom.getStudents().contains(student)) throw new AppApiException(HttpStatus.BAD_REQUEST,"This student is already in this class");
+        classroom.getStudents().add(student);
+        return classroomMapper.entityToResponse(classroomRepository.save(classroom));
     }
 }

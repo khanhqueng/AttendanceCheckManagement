@@ -94,4 +94,9 @@ public class AttendanceServiceImpl implements AttendanceService {
         );
         return session.getAttendances().stream().map(attendanceMapper::entityToResponse).toList();
     }
+
+    @Override
+    public void deleteALlAttendance() {
+        attendanceRepository.deleteAll();
+    }
 }

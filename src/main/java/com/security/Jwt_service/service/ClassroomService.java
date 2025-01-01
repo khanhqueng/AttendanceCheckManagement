@@ -12,4 +12,5 @@ public interface ClassroomService {
     ClassroomResponseDto getClassroomById(Long id);
     ClassroomResponseDto addClassRepStudent(Long classId,Long studentId);
     List<ClassroomForRollCaller> getClassroomCanRollCall(Long userId);
+    ClassroomResponseDto addStudentToClass(Long classId, Long studentId);
 }

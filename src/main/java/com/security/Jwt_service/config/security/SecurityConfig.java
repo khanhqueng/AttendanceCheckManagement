@@ -76,6 +76,7 @@ public class SecurityConfig {
                                         .requestMatchers(HttpMethod.POST, "/classroom/**").hasAuthority("TEACHER")
                                         .requestMatchers("/user/**").permitAll()
                                         .requestMatchers("/session/**").permitAll()
+                                        .requestMatchers("/statistic/**").permitAll()
                                         .anyRequest().authenticated();
                             }
                     )

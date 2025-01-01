@@ -1,6 +1,7 @@
 package com.security.Jwt_service.controller;
 
 import com.security.Jwt_service.dto.request.session.SessionCreateDto;
+import com.security.Jwt_service.dto.request.session.SessionUpdateDto;
 import com.security.Jwt_service.dto.request.student.StudentCreateDto;
 import com.security.Jwt_service.dto.response.session.SessionResponseCreateDto;
 import com.security.Jwt_service.dto.response.session.SessionResponseDto;
@@ -12,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/session")
@@ -29,5 +32,10 @@ public class SessionController {
     public ResponseEntity<String> deleteSession(@PathVariable(name = "id") Long id){
         sessionService.deleteSession(id);
         return new ResponseEntity<>("Delete Successfully", HttpStatus.OK);
+    }
+    @Operation(summary = "Update sessions", description = "API for update session")
+    @PutMapping("/update")
+    public ResponseEntity<List<SessionResponseDto>> updateSession(@RequestBody SessionUpdateDto dto){
+        return new ResponseEntity<>(sessionService.updateSession(dto), HttpStatus.OK);
     }
 }

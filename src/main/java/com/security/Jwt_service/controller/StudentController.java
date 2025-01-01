@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -46,7 +47,9 @@ public class StudentController {
 //    }
 @Operation(summary = "Search attendance history by start date, end date and student code", description = "API for search attendance history")
     @GetMapping("/search")
-    public ResponseEntity<StudentAttendanceHistoryResponseDto> searchStudent(@Valid @RequestBody SearchAttendanceHistoryDto dto) {
-        return new ResponseEntity<>(studentService.searchStudent(dto), HttpStatus.OK);
+    public ResponseEntity<StudentAttendanceHistoryResponseDto> searchStudent(@RequestParam(name = "studentCode") String studentCode,
+                                                                             @RequestParam(name = "startDate") LocalDate startDate,
+                                                                             @RequestParam(name = "endDate") LocalDate endDate) {
+        return new ResponseEntity<>(studentService.searchStudent(studentCode, startDate,endDate), HttpStatus.OK);
     }
 }
