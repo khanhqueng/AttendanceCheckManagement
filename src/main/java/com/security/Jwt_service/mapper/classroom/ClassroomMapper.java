@@ -3,6 +3,7 @@ package com.security.Jwt_service.mapper.classroom;
 import com.security.Jwt_service.dto.request.classroom.ClassroomCreateDto;
 import com.security.Jwt_service.dto.response.classroom.ClassroomForRollCaller;
 import com.security.Jwt_service.dto.response.classroom.ClassroomResponseDto;
+import com.security.Jwt_service.dto.response.classroom.ClassroomWithMostAbsentStudent;
 import com.security.Jwt_service.entity.classroom.Classroom;
 import com.security.Jwt_service.entity.course.Course;
 import com.security.Jwt_service.entity.session.Session;
@@ -19,4 +20,6 @@ public interface ClassroomMapper extends GenericMapper<Classroom, ClassroomCreat
 
     @Mapping(target = "id", source = "entity.id")
     ClassroomForRollCaller fromEntityToClassForRollCall(Classroom entity);
+    @Mapping(target = "id", source = "entity.id")
+    ClassroomWithMostAbsentStudent fromEntityToClassWithMostAbsent(Classroom entity);
 }

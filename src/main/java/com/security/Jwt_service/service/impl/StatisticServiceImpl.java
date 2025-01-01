@@ -1,5 +1,6 @@
 package com.security.Jwt_service.service.impl;
 
+import com.security.Jwt_service.dto.response.classroom.ClassroomWithMostAbsentStudent;
 import com.security.Jwt_service.dto.response.statistic.StatisticForManager;
 import com.security.Jwt_service.entity.attendance.Attendance;
 import com.security.Jwt_service.entity.classroom.Classroom;
@@ -24,7 +25,7 @@ public class StatisticServiceImpl implements StatisticService {
     private final ClassroomMapper classroomMapper;
     @Override
     public StatisticForManager statisticForManager(String timeDigit) {
-        LocalDate today = LocalDate.now();
+        LocalDate today = LocalDate.of(2024,12,27);
         int absentWithPermission= 0;
         int lateForClass= 0;
         int absentWithoutPermission= 0;
@@ -36,7 +37,6 @@ public class StatisticServiceImpl implements StatisticService {
                 LocalDate endOfWeek = today.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
                 LocalDateTime endOfWeekTime = LocalDateTime.of(endOfWeek, LocalTime.MAX);
                 List<Attendance> attendances= attendanceRepository.findAllAttendancesByTimeRange(startOfWeekTime, endOfWeekTime);
-
                 for (Attendance attendance: attendances){
                     if (attendance.getStatus().equals("Vang ko phep"))
                         absentWithoutPermission++;
@@ -47,12 +47,12 @@ public class StatisticServiceImpl implements StatisticService {
                     }
                     else onTime++;
                 }
-                Map<Classroom, Integer> aggregatedClass = aggregateAbsentStudent(attendances);
-                return new StatisticForManager(absentWithPermission,
+                return new StatisticForManager(
+                        absentWithPermission,
                         lateForClass,
                         absentWithoutPermission,
                         onTime,
-                        aggregatedClass.keySet().stream().map(classroomMapper::entityToResponse).limit(5).toList()
+                        aggregateForManager(attendances)
                         );
             }
             case "Month":{
@@ -72,12 +72,11 @@ public class StatisticServiceImpl implements StatisticService {
                     }
                     else onTime++;
                 }
-                Map<Classroom, Integer> aggregatedClass = aggregateAbsentStudent(attendances);
                 return new StatisticForManager(absentWithPermission,
                         lateForClass,
                         absentWithoutPermission,
                         onTime,
-                        aggregatedClass.keySet().stream().map(classroomMapper::entityToResponse).limit(5).toList()
+                        aggregateForManager(attendances)
                 );
             }
             case "Year": {
@@ -97,16 +96,15 @@ public class StatisticServiceImpl implements StatisticService {
                     }
                     else onTime++;
                 }
-                Map<Classroom, Integer> aggregatedClass = aggregateAbsentStudent(attendances);
                 return new StatisticForManager(absentWithPermission,
                         lateForClass,
                         absentWithoutPermission,
                         onTime,
-                        aggregatedClass.keySet().stream().map(classroomMapper::entityToResponse).limit(5).toList()
+                        aggregateForManager(attendances)
                 );
             }
         }
-        throw new AppApiException(HttpStatus.BAD_REQUEST, "Time digit is invalid");
+        throw new AppApiException(HttpStatus.BAD_REQUEST, "Time digit is invalid, time digit is one of Week, Month, Year");
 
     }
     private Map<Classroom, Integer> aggregateAbsentStudent(List<Attendance> attendances){
@@ -124,5 +122,15 @@ public class StatisticServiceImpl implements StatisticService {
             result.put(entry.getKey(), entry.getValue());
         }
         return result;
+    }
+    private List<ClassroomWithMostAbsentStudent> aggregateForManager(List<Attendance> attendances){
+        Map<Classroom, Integer> aggregatedClass = aggregateAbsentStudent(attendances);
+        return aggregatedClass.keySet().stream().map(
+                classroom -> {
+                    ClassroomWithMostAbsentStudent classroomWithMostAbsentStudent = classroomMapper.fromEntityToClassWithMostAbsent(classroom);
+                    classroomWithMostAbsentStudent.setNumAbsentStudent(aggregatedClass.get(classroom));
+                    return classroomWithMostAbsentStudent;
+                }
+        ).limit(5).toList();
     }
 }

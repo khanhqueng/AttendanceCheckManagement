@@ -14,4 +14,5 @@ public class ClassroomForRollCaller {
     private Long id;
     private String name;
     private SessionResponseDto session;
+    private int allowedLateTime;
 }

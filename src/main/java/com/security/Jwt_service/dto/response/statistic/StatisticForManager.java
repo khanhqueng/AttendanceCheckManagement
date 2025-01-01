@@ -1,6 +1,7 @@
 package com.security.Jwt_service.dto.response.statistic;
 
 import com.security.Jwt_service.dto.response.classroom.ClassroomResponseDto;
+import com.security.Jwt_service.dto.response.classroom.ClassroomWithMostAbsentStudent;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,5 +18,5 @@ public class StatisticForManager {
     private Integer LateForClass;
     private Integer absentWithoutPermission;
     private Integer onTime;
-    private List<ClassroomResponseDto> topClassWithMostAbsentStudent;
+    private List<ClassroomWithMostAbsentStudent> topClassWithMostAbsentStudent;
 }
