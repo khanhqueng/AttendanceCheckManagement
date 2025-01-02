@@ -13,6 +13,7 @@ import com.security.Jwt_service.dto.response.student.StudentResponseDto;
 import com.security.Jwt_service.dto.response.user.UserResponseDto;
 import com.security.Jwt_service.service.ClassroomService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -50,34 +51,42 @@ public class ClassroomController {
         ClassroomCreateDto dto = objectMapper.readValue(classInfo, ClassroomCreateDto.class);
         return new ResponseEntity<>(classroomService.createClassroomWithStudentThroughExcel(dto, excelFile), HttpStatus.CREATED);
     }
+
     @Operation(summary = "Get all classrooms", description = "API for get all classrooms")
     @GetMapping
     public ResponseEntity<List<ClassroomResponseDto>> getAllClassrooms(){
         return new ResponseEntity<>(classroomService.getAllClassrooms(), HttpStatus.OK);
     }
+
     @Operation(summary = "Get classroom by id", description = "API for get classroom by id")
     @GetMapping("/{id}")
     public ResponseEntity<ClassroomResponseDto> getClassroomById(@PathVariable(name = "id") Long id){
         return new ResponseEntity<>(classroomService.getClassroomById(id), HttpStatus.OK);
     }
+
     @Operation(summary = "Update classroom representative", description = "API for update rep classroom")
     @PostMapping("/{classId}/{studentId}")
     public ResponseEntity<ClassroomResponseDto> addRepId(@PathVariable(name = "classId") Long classId,
                                                          @PathVariable(name = "studentId") Long studentId){
         return new ResponseEntity<>(classroomService.addClassRepStudent(classId, studentId), HttpStatus.OK);
     }
+
+    @SecurityRequirement(name = "Authorization")
     @Operation(summary = "Get classrooms can roll call", description = "API for get classroom can roll call")
     @GetMapping("/roll-call")
     public ResponseEntity<List<ClassroomForRollCaller>> getClassCanRollCall(Authentication authentication){
         Long userId= ((CustomUserDetails) authentication.getPrincipal()).getId();
         return new ResponseEntity<>(classroomService.getClassroomCanRollCall(userId), HttpStatus.OK);
     }
+
     @Operation(summary = "Add a student to a classroom", description = "API for add a student to a classroom")
     @PutMapping("/{classId}/{studentId}")
     public ResponseEntity<ClassroomResponseDto> addStudentToClass(@PathVariable(name = "classId") Long classId,
                                                                   @PathVariable(name = "studentId") Long studentId){
         return new ResponseEntity<>(classroomService.addStudentToClass(classId, studentId), HttpStatus.OK);
     }
+
+    @SecurityRequirement(name = "Authorization")
     @Operation(summary = "Get statistic attendances of a student", description = "API for get statistic attendance of a student")
     @GetMapping("/student")
     public ResponseEntity<List<ClassroomStudentIn>> getClassOfAStudent(Authentication authentication){
