@@ -32,7 +32,7 @@ public class Student extends Base {
     private String phoneNumber;
 
     @Column(name = "student_code", unique = true,nullable = false)
-    private String studentCode;
+        private String studentCode;
 
     @Column(name = "dob")
     @JsonFormat(pattern = "yyyy-MM-dd")

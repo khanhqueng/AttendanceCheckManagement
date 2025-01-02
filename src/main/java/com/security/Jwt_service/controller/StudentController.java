@@ -5,6 +5,7 @@ import com.security.Jwt_service.dto.request.student.StudentCreateDto;
 import com.security.Jwt_service.dto.response.attend.SearchHistoryResponseDto;
 import com.security.Jwt_service.dto.response.student.StudentAttendanceHistoryResponseDto;
 import com.security.Jwt_service.dto.response.student.StudentResponseDto;
+import com.security.Jwt_service.dto.response.student.StudentWithViolation;
 import com.security.Jwt_service.service.StudentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -45,11 +46,16 @@ public class StudentController {
 //    public ResponseEntity<String> getAllStudentAdvance() throws IOException {
 //        return new ResponseEntity<>(studentService.getAllStudentAdvance(), HttpStatus.OK);
 //    }
-@Operation(summary = "Search attendance history by start date, end date and student code", description = "API for search attendance history")
+    @Operation(summary = "Search attendance history by start date, end date and student code", description = "API for search attendance history")
     @GetMapping("/search")
     public ResponseEntity<StudentAttendanceHistoryResponseDto> searchStudent(@RequestParam(name = "studentCode") String studentCode,
                                                                              @RequestParam(name = "startDate") LocalDate startDate,
                                                                              @RequestParam(name = "endDate") LocalDate endDate) {
         return new ResponseEntity<>(studentService.searchStudent(studentCode, startDate,endDate), HttpStatus.OK);
+    }
+    @Operation(summary = "Get student violation by classroom id", description = "API for get student violation")
+    @GetMapping("/violation/{classroomId}")
+    public ResponseEntity<List<StudentWithViolation>> getStudentViolation(@PathVariable(name = "classroomId") Long classroomId) {
+        return new ResponseEntity<>(studentService.getAllStudentWithViolation(classroomId), HttpStatus.OK);
     }
 }

@@ -10,10 +10,7 @@ import com.security.Jwt_service.exception.ResourceNotFoundException;
 import com.security.Jwt_service.mapper.student.StudentMapper;
 import com.security.Jwt_service.mapper.teacher.TeacherMapper;
 import com.security.Jwt_service.mapper.user.UserMapper;
-import com.security.Jwt_service.repository.RoleRepository;
-import com.security.Jwt_service.repository.StudentRepository;
-import com.security.Jwt_service.repository.TeacherRepository;
-import com.security.Jwt_service.repository.UserRepository;
+import com.security.Jwt_service.repository.*;
 import com.security.Jwt_service.service.UserService;
 import com.security.Jwt_service.service.factorymethod.UserCreateMethod;
 import com.security.Jwt_service.service.redis.BaseRedisService;
@@ -41,6 +38,7 @@ public class UserServiceImpl implements UserService {
     private final StudentMapper studentMapper;
     private final TeacherMapper teacherMapper;
     private final UserMapper userMapper;
+    private final ClassroomRepository classroomRepository;
     private final BaseRedisService<String, String, String> redisTemplate;
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -104,7 +102,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserCreateMethod createUserMethod(UserCreateDto userCreateDto) {
-        if(userCreateDto.getRoleName().equals("Student")) return new StudentServiceImpl(studentRepository,studentMapper,roleRepository);
+        if(userCreateDto.getRoleName().equals("Student")) return new StudentServiceImpl(studentRepository,studentMapper,roleRepository,classroomRepository);
         if(userCreateDto.getRoleName().equals("Teacher")) return new TeacherServiceImpl(teacherRepository,roleRepository,teacherMapper);
         throw new AppApiException(HttpStatus.BAD_REQUEST,"Invalid role");
     }

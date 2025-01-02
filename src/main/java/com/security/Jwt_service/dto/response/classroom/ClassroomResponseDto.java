@@ -7,6 +7,7 @@ import com.security.Jwt_service.dto.response.student.StudentResponseDto;
 import com.security.Jwt_service.dto.response.teacher.TeacherResponseDto;
 import com.security.Jwt_service.entity.session.Session;
 import com.security.Jwt_service.entity.user.Student;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,6 +15,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Set;
 
 @Getter
@@ -29,7 +31,15 @@ public class ClassroomResponseDto {
 
     private LocalDate endDate;
 
-    private int allowedLateTime;
+    @JsonFormat(pattern = "HH:mm:ss")
+    private LocalTime startTime;
+
+    @Column(name = "end_time")
+    @JsonFormat(pattern = "HH:mm:ss")
+    private LocalTime endTime;
+
+    private Integer allowedLateTime;
+    private Integer allowedAbsent;
 
     private CourseResponseDto course;
 

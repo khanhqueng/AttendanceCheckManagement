@@ -161,6 +161,14 @@ public class ClassroomServiceImpl implements ClassroomService {
         return result;
     }
 
+    @Override
+    public List<ClassroomResponseDto> getAllClassByUserId(Long userId) {
+        Student student= studentRepository.findByUserId(userId).orElseThrow(
+                ()-> new ResourceNotFoundException("Student", "user id", userId)
+        );
+        return student.getClassrooms().stream().map(classroomMapper::entityToResponse).toList();
+    }
+
     private Set<Student> processExcelFile(MultipartFile excelFile) {
         List<String> studentCodes = new ArrayList<>();
         try{

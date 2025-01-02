@@ -87,11 +87,11 @@ public class ClassroomController {
     }
 
     @SecurityRequirement(name = "Authorization")
-    @Operation(summary = "Get statistic attendances of a student", description = "API for get statistic attendance of a student")
-    @GetMapping("/student")
-    public ResponseEntity<List<ClassroomStudentIn>> getClassOfAStudent(Authentication authentication){
-        Long userId= ((CustomUserDetails ) authentication.getPrincipal()).getId();
-        return new ResponseEntity<>(classroomService.getAllClassAndAttendancesForAStudent(userId), HttpStatus.OK);
+    @Operation(summary = "Get classrooms by user id", description = "API for get classroom by user id")
+    @GetMapping("/user")
+    public ResponseEntity<List<ClassroomResponseDto>> getAllClassroomByUserId(Authentication authentication){
+        Long userId= ((CustomUserDetails) authentication.getPrincipal()).getId();
+        return new ResponseEntity<>(classroomService.getAllClassByUserId(userId), HttpStatus.OK);
     }
 
 }

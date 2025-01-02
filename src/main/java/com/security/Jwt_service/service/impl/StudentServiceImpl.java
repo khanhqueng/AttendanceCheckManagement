@@ -6,9 +6,11 @@ import com.security.Jwt_service.dto.request.user.UserCreateDto;
 import com.security.Jwt_service.dto.response.attend.SearchHistoryResponseDto;
 import com.security.Jwt_service.dto.response.student.StudentAttendanceHistoryResponseDto;
 import com.security.Jwt_service.dto.response.student.StudentResponseDto;
+import com.security.Jwt_service.dto.response.student.StudentWithViolation;
 import com.security.Jwt_service.dto.response.user.UserResponseDto;
 import com.security.Jwt_service.dto.response.user.UserResponseFactory;
 import com.security.Jwt_service.entity.attendance.Attendance;
+import com.security.Jwt_service.entity.classroom.Classroom;
 import com.security.Jwt_service.entity.user.Role;
 import com.security.Jwt_service.entity.user.Student;
 import com.security.Jwt_service.entity.user.User;
@@ -16,6 +18,7 @@ import com.security.Jwt_service.exception.AppApiException;
 import com.security.Jwt_service.exception.ResourceDuplicateException;
 import com.security.Jwt_service.exception.ResourceNotFoundException;
 import com.security.Jwt_service.mapper.student.StudentMapper;
+import com.security.Jwt_service.repository.ClassroomRepository;
 import com.security.Jwt_service.repository.RoleRepository;
 import com.security.Jwt_service.repository.StudentRepository;
 import com.security.Jwt_service.service.StudentService;
@@ -57,6 +60,7 @@ public class StudentServiceImpl implements StudentService, UserCreateMethod {
     private final StudentRepository studentRepository;
     private final StudentMapper studentMapper;
     private final RoleRepository roleRepository;
+    private final ClassroomRepository classroomRepository;
 //    private final BaseRedisService<String,String,String> redisTemplate;
     private static int count=0;
     private static AtomicInteger current=new AtomicInteger(0);
@@ -153,6 +157,40 @@ public class StudentServiceImpl implements StudentService, UserCreateMethod {
         responseDto.setHistory(history);
         return responseDto;
     }
+
+    @Override
+    public List<StudentWithViolation> getAllStudentWithViolation(Long classroomId) {
+        Classroom classroom = classroomRepository.findById(classroomId).orElseThrow(
+                ()-> new ResourceNotFoundException("Classroom", "id", classroomId)
+        );
+        Set<Student> students = classroom.getStudents();
+        List<StudentWithViolation> response= new ArrayList<>();
+        for(Student student: students){
+            StudentWithViolation studentWithViolation = new StudentWithViolation();
+            studentWithViolation.setId(student.getId());
+            studentWithViolation.setName(student.getName());
+            studentWithViolation.setStudentCode(student.getStudentCode());
+
+            List<Attendance> attendances = student.getAttendances().stream().filter(
+                    attendance -> attendance.getSession().getClassroom().getId().equals(classroomId)
+            ).toList();
+            Integer absentWithoutPermission=0;
+            Integer late= 0;
+            Integer absentWithPermission=0;
+
+            for(Attendance attendance: attendances){
+                if (attendance.getStatus().equals("Vang ko phep")) absentWithoutPermission++;
+                else if (attendance.getStatus().equals("Vang co phep")) absentWithPermission++;
+                else if (attendance.getStatus().startsWith("Di tre")) late++;
+            }
+            studentWithViolation.setAbsentWithPermission(absentWithPermission);
+            studentWithViolation.setAbsentWithoutPermission(absentWithoutPermission);
+            studentWithViolation.setLate(late);
+            response.add(studentWithViolation);
+        }
+        return response;
+    }
+
     private boolean isDateBetween(LocalDate startDate, LocalDate endDate, LocalDate dateToCheck) {
         return (dateToCheck.isAfter(startDate) || dateToCheck.isEqual(startDate)) &&
                 (dateToCheck.isBefore(endDate) || dateToCheck.isEqual(endDate));
