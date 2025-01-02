@@ -1,6 +1,7 @@
 package com.security.Jwt_service.service.impl;
 
 import com.security.Jwt_service.config.security.CustomUserDetails;
+import com.security.Jwt_service.dto.request.auth.AuthRefreshToken;
 import com.security.Jwt_service.dto.request.user.SignInRequestDto;
 import com.security.Jwt_service.dto.response.auth.TokenResponseDto;
 import com.security.Jwt_service.entity.user.User;
@@ -38,8 +39,8 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public TokenResponseDto refresh(HttpServletRequest request) {
-        String refreshToken= request.getHeader("refresh-token");
+    public TokenResponseDto refresh(AuthRefreshToken request) {
+        String refreshToken= request.getRefreshToken();
         if(StringUtils.hasText(refreshToken) && jwtService.isValidRefreshToken(refreshToken)){
             Long userId= jwtService.extractUserid(refreshToken, TokenType.REFRESH_TOKEN);
             User user= userRepository.findById(userId).orElseThrow(()-> new UsernameNotFoundException("User not found"));

@@ -1,5 +1,6 @@
 package com.security.Jwt_service.controller;
 
+import com.security.Jwt_service.dto.request.auth.AuthRefreshToken;
 import com.security.Jwt_service.dto.request.user.SignInRequestDto;
 import com.security.Jwt_service.dto.request.user.UserCreateDto;
 import com.security.Jwt_service.dto.response.auth.TokenResponseDto;
@@ -32,7 +33,7 @@ public class AuthController {
     }
     @Operation(summary = "Resupply access token", description = "API for recreate access token when old token expired")
     @PostMapping("/refresh")
-    public ResponseEntity<TokenResponseDto> refresh(HttpServletRequest request){
-        return new ResponseEntity<>(authService.refresh(request), HttpStatus.OK);
+    public ResponseEntity<TokenResponseDto> refresh(@RequestBody AuthRefreshToken refreshToken){
+        return new ResponseEntity<>(authService.refresh(refreshToken), HttpStatus.OK);
     }
 }

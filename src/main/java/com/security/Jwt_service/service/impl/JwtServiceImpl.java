@@ -32,7 +32,7 @@ public class JwtServiceImpl implements JwtService {
     @Override
     public String generateAccessToken(CustomUserDetails userDetails) {
         Date currentTime =new Date();
-        Date expireTime= new Date(currentTime.getTime()+1000*60*expiryMinutes);
+        Date expireTime= new Date(currentTime.getTime()+1000*60*60*expiryHour);
         return Jwts.builder()
                 .subject(Long.toString(userDetails.getId()))
                 .claim("role", userDetails.getAuthorities())
@@ -95,7 +95,7 @@ public class JwtServiceImpl implements JwtService {
     @Override
     public String generateRefreshToken(CustomUserDetails userDetails) {
         Date currentTime =new Date();
-        Date expireTime= new Date(currentTime.getTime()+1000*60*60*expiryHour);
+        Date expireTime= new Date(currentTime.getTime()+1000*60*60*2*expiryHour);
         return Jwts.builder()
                 .subject(Long.toString(userDetails.getId()))
                 .issuedAt(new Date())
