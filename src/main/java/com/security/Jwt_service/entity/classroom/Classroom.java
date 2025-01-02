@@ -44,7 +44,10 @@ public class Classroom extends Base {
     private LocalTime endTime;
 
     @Column(name = "allowed_lateTime")
-    private int allowedLateTime;
+    private Integer allowedLateTime;
+
+    @Column(name = "allowed_absent")
+    private Integer allowedAbsent;
 
     @ManyToOne
     @JoinColumn(name = "course_id",referencedColumnName = "id", nullable = false)

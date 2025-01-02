@@ -23,4 +23,5 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     Optional<Student> findByCodeAndDate(@Param("studentCode") String studentCode,
                               @Param("startDate") LocalDate startDate,
                               @Param("endDate") LocalDate endDate);
+    Set<Student> findByStudentCodeIn(List<String> studentCodes);
 }

@@ -1,21 +1,28 @@
 package com.security.Jwt_service.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.security.Jwt_service.config.security.CustomUserDetails;
 import com.security.Jwt_service.dto.request.classroom.ClassroomCreateDto;
 import com.security.Jwt_service.dto.request.student.StudentCreateDto;
 import com.security.Jwt_service.dto.response.classroom.ClassroomForRollCaller;
 import com.security.Jwt_service.dto.response.classroom.ClassroomResponseDto;
+import com.security.Jwt_service.dto.response.classroom.ClassroomStudentIn;
 import com.security.Jwt_service.dto.response.course.CourseResponseDto;
 import com.security.Jwt_service.dto.response.student.StudentResponseDto;
+import com.security.Jwt_service.dto.response.user.UserResponseDto;
 import com.security.Jwt_service.service.ClassroomService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -25,13 +32,23 @@ import java.util.List;
 @Tag(name = "Classroom Controller")
 public class ClassroomController {
     private final ClassroomService classroomService;
+    @Autowired
+    private ObjectMapper objectMapper;
+//    @Operation(summary = "Create classroom", description = "API for create new classroom")
+//    @PostMapping
+//    public ResponseEntity<ClassroomResponseDto> createClassroom(@RequestBody @Valid ClassroomCreateDto dto,
+//                                                                @RequestParam(name = "student") List<Long> studentId,
+//                                                                @RequestParam(name = "teacher") Long teacherId,
+//                                                                @RequestParam(name = "course") Long courseId){
+//        return new ResponseEntity<>(classroomService.createClassroom(dto, studentId, teacherId, courseId), HttpStatus.CREATED);
+//    }
     @Operation(summary = "Create classroom", description = "API for create new classroom")
-    @PostMapping
-    public ResponseEntity<ClassroomResponseDto> createClassroom(@RequestBody @Valid ClassroomCreateDto dto,
-                                                                @RequestParam(name = "student") List<Long> studentId,
-                                                                @RequestParam(name = "teacher") Long teacherId,
-                                                                @RequestParam(name = "course") Long courseId){
-        return new ResponseEntity<>(classroomService.createClassroom(dto, studentId, teacherId, courseId), HttpStatus.CREATED);
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<ClassroomResponseDto> createClassroom(@RequestParam("classroom-info") String classInfo,
+                                                                @RequestParam(name = "student-file") MultipartFile excelFile) throws JsonProcessingException {
+        ClassroomCreateDto dto = objectMapper.readValue(classInfo, ClassroomCreateDto.class);
+        return new ResponseEntity<>(classroomService.createClassroomWithStudentThroughExcel(dto, excelFile), HttpStatus.CREATED);
     }
     @Operation(summary = "Get all classrooms", description = "API for get all classrooms")
     @GetMapping
@@ -61,4 +78,11 @@ public class ClassroomController {
                                                                   @PathVariable(name = "studentId") Long studentId){
         return new ResponseEntity<>(classroomService.addStudentToClass(classId, studentId), HttpStatus.OK);
     }
+    @Operation(summary = "Get statistic attendances of a student", description = "API for get statistic attendance of a student")
+    @GetMapping("/student")
+    public ResponseEntity<List<ClassroomStudentIn>> getClassOfAStudent(Authentication authentication){
+        Long userId= ((CustomUserDetails ) authentication.getPrincipal()).getId();
+        return new ResponseEntity<>(classroomService.getAllClassAndAttendancesForAStudent(userId), HttpStatus.OK);
+    }
+
 }

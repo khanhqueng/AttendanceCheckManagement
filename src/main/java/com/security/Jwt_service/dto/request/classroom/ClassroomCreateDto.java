@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Getter
 @Setter
@@ -29,5 +30,15 @@ public class ClassroomCreateDto {
     @NotNull(message = "end date of classroom must not be null")
     private LocalDate endDate;
 
-    private int allowedLateTime;
+    @JsonFormat(pattern = "HH:mm")
+    @NotNull(message = "start time of classroom must not be null")
+    private LocalTime startTime;
+
+    @JsonFormat(pattern = "HH:mm")
+    @NotNull(message = "end time of classroom must not be null")
+    private LocalTime endTime;
+
+    private Integer allowedLateTime;
+    private Long teacherId;
+    private Long courseId;
 }
