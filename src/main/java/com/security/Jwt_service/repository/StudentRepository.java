@@ -15,13 +15,6 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     Boolean existsByEmailOrStudentCode(String email, String studentCode);
     Set<Student> findAllByIdIn(List<Long> ids);
     Optional<Student> findByUserId(Long userId);
-    @Query("SELECT s FROM Student s " +
-            "JOIN FETCH s.attendances a " +
-            "JOIN FETCH a.session ses " +
-            "JOIN FETCH ses.classroom c " +
-            "WHERE s.studentCode = :studentCode AND (DATE(a.onClassTime) BETWEEN :startDate AND :endDate OR DATE(a.onClassTime) IS NULL)")
-    Optional<Student> findByCodeAndDate(@Param("studentCode") String studentCode,
-                              @Param("startDate") LocalDate startDate,
-                              @Param("endDate") LocalDate endDate);
+    Optional<Student> findByStudentCode(String studentCode);
     Set<Student> findByStudentCodeIn(List<String> studentCodes);
 }

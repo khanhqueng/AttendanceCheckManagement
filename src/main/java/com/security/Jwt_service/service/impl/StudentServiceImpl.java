@@ -44,8 +44,10 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -127,26 +129,33 @@ public class StudentServiceImpl implements StudentService, UserCreateMethod {
 
     @Override
     public StudentAttendanceHistoryResponseDto searchStudent(String studentCode, LocalDate startDate, LocalDate endDate) {
-        Student student=  studentRepository.findByCodeAndDate(studentCode, startDate,endDate).orElseThrow(
-                ()-> new AppApiException( HttpStatus.BAD_REQUEST,"Student History doesn't exists in this range time")
+        if(!startDate.isBefore(endDate)) throw new AppApiException(HttpStatus.BAD_REQUEST,"Start Date cannot be greater than end date");
+        Student student=  studentRepository.findByStudentCode(studentCode).orElseThrow(
+                ()-> new ResourceNotFoundException("Student", "code", studentCode)
         );
         StudentAttendanceHistoryResponseDto responseDto= new StudentAttendanceHistoryResponseDto();
         responseDto.setStudentName(student.getName());
         responseDto.setStudentCode(student.getStudentCode());
 
         List<SearchHistoryResponseDto>  history= new ArrayList<>();
-        for(Attendance attendance: student.getAttendances()){
-            SearchHistoryResponseDto searchHistory= SearchHistoryResponseDto.builder()
+        Set<Attendance> attendances = student.getAttendances();
+        Set<Attendance> filteredList=  attendances.stream().filter(attendance -> isDateBetween(startDate, endDate, attendance.getSession().getStartTime().toLocalDate())).collect(Collectors.toSet());
+        filteredList.forEach(attendance -> {
+            SearchHistoryResponseDto searchHistoryResponseDto= SearchHistoryResponseDto.builder()
+                    .no(attendance.getSession().getNo())
                     .status(attendance.getStatus())
                     .onClassTime(attendance.getOnClassTime())
-                    .startTime(attendance.getSession().getStartTime())
                     .className(attendance.getSession().getClassroom().getName())
-                    .no(attendance.getSession().getNo())
+                    .startTime(attendance.getSession().getStartTime())
                     .build();
-            history.add(searchHistory);
-        }
+            history.add(searchHistoryResponseDto);
+        });
         responseDto.setHistory(history);
         return responseDto;
+    }
+    private boolean isDateBetween(LocalDate startDate, LocalDate endDate, LocalDate dateToCheck) {
+        return (dateToCheck.isAfter(startDate) || dateToCheck.isEqual(startDate)) &&
+                (dateToCheck.isBefore(endDate) || dateToCheck.isEqual(endDate));
     }
 
 //    @Override
