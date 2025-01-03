@@ -1,6 +1,7 @@
 package com.security.Jwt_service.util;
 
 import com.security.Jwt_service.dto.response.classroom.ClassroomResponseDto;
+import com.security.Jwt_service.dto.response.session.SessionResponseDto;
 import com.security.Jwt_service.entity.classroom.Classroom;
 import com.security.Jwt_service.entity.session.Session;
 import com.security.Jwt_service.entity.user.Student;
@@ -32,6 +33,13 @@ public abstract class MapperUtils {
                 ()-> new ResourceNotFoundException("Student", "id", id)
         );
         return new ClassroomResponseDto.ClassMonitor(student.getStudentCode(), student.getName());
+    }
+    public SessionResponseDto.SessionMonitor mapToSessionMonitor(Long id){
+        if(id==null) return null;
+        Student student= studentRepository.findById(id).orElseThrow(
+                ()-> new ResourceNotFoundException("Student", "id", id)
+        );
+        return new  SessionResponseDto.SessionMonitor(student.getStudentCode(), student.getName());
     }
 
 }

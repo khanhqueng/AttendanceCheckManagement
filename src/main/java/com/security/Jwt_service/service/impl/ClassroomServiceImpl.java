@@ -162,11 +162,19 @@ public class ClassroomServiceImpl implements ClassroomService {
     }
 
     @Override
-    public List<ClassroomResponseDto> getAllClassByUserId(Long userId) {
+    public List<ClassroomResponseDto> getAllClassByStudentId(Long userId) {
         Student student= studentRepository.findByUserId(userId).orElseThrow(
                 ()-> new ResourceNotFoundException("Student", "user id", userId)
         );
         return student.getClassrooms().stream().map(classroomMapper::entityToResponse).toList();
+    }
+
+    @Override
+    public List<ClassroomResponseDto> getAllClassByTeacherId(Long userId) {
+        Teacher teacher= teacherRepository.findByUserId(userId).orElseThrow(
+                ()-> new ResourceNotFoundException("Teacher", "user id", userId)
+        );
+        return teacher.getClassrooms().stream().map(classroomMapper::entityToResponse).toList();
     }
 
     @Override

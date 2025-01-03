@@ -17,6 +17,7 @@ public interface ClassroomService {
     ClassroomResponseDto addStudentToClass(Long classId, Long studentId);
     ClassroomResponseDto createClassroomWithStudentThroughExcel(ClassroomCreateDto createDto, MultipartFile excelFile);
     List<ClassroomStudentIn> getAllClassAndAttendancesForAStudent(Long userId);
-    List<ClassroomResponseDto> getAllClassByUserId(Long userId);
+    List<ClassroomResponseDto> getAllClassByStudentId(Long userId);
+    List<ClassroomResponseDto> getAllClassByTeacherId(Long userId);
     ClassroomResponseDto updateClassroom(ClassroomCreateDto createDto, Long classroomId);
 }

@@ -17,6 +17,15 @@ import java.time.LocalDateTime;
 public class SessionResponseDto {
     private Long id;
     private int no;
+    private SessionMonitor representative_id;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class SessionMonitor {
+        private String studentCode;
+        private String name;
+    }
 }

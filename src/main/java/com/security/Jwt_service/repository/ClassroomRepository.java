@@ -12,7 +12,7 @@ public interface ClassroomRepository extends JpaRepository<Classroom, Long> {
     Boolean existsByName(String name);
     @Query("SELECT c FROM Classroom c " +
             "JOIN c.sessions s " +
-            "WHERE c.classRepId = :repId " +
+            "WHERE s.representative_id = :repId " +
             "AND DATE(s.startTime) = :currentDate")
     List<Classroom> findByClassRepId(@Param("repId")Long repId, @Param("currentDate") LocalDate currentDate);
 }

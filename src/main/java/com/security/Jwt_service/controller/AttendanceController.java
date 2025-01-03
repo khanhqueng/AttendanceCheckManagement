@@ -2,12 +2,15 @@ package com.security.Jwt_service.controller;
 
 import com.security.Jwt_service.config.security.CustomUserDetails;
 import com.security.Jwt_service.dto.request.course.CourseCreateDto;
+import com.security.Jwt_service.dto.request.survey.SurveyRequestDto;
 import com.security.Jwt_service.dto.response.attend.AttendanceResponseDto;
 import com.security.Jwt_service.dto.response.course.CourseResponseDto;
 import com.security.Jwt_service.service.AttendanceService;
+import com.security.Jwt_service.service.SurveyService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +25,7 @@ import java.util.List;
 @Tag(name = "Attendance Controller")
 public class AttendanceController {
     private final AttendanceService attendanceService;
+    private final SurveyService surveyService;
     @SecurityRequirement(name = "Authorization")
     @Operation(summary = "Add attendance ( Only authenticated student) ", description = "API for add new attendance")
     @PostMapping("/{session_id}")
@@ -56,6 +60,13 @@ public class AttendanceController {
     public ResponseEntity<String> deleteAllAttendances(){
         attendanceService.deleteALlAttendance();
         return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
+    @SecurityRequirement(name = "Authorization")
+    @Operation(summary = "Add survey for session ", description = "API for add survey info for session")
+    @PutMapping("/survey")
+    public ResponseEntity<AttendanceResponseDto> addSurvey(Authentication authentication, @RequestBody @Valid SurveyRequestDto requestDto){
+        Long userId= ((CustomUserDetails) authentication.getPrincipal()).getId();
+        return new ResponseEntity<>(surveyService.addSurveyInfo(requestDto,userId), HttpStatus.OK);
     }
 
 }

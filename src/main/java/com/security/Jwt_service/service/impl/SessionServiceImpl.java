@@ -14,6 +14,7 @@ import com.security.Jwt_service.mapper.session.SessionMapper;
 import com.security.Jwt_service.repository.AttendanceRepository;
 import com.security.Jwt_service.repository.ClassroomRepository;
 import com.security.Jwt_service.repository.SessionRepository;
+import com.security.Jwt_service.repository.StudentRepository;
 import com.security.Jwt_service.service.SessionService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.LoggerFactory;
@@ -38,6 +39,7 @@ public class SessionServiceImpl implements SessionService {
     private final SessionMapper sessionMapper;
     private final ClassroomRepository classroomRepository;
     private final AttendanceRepository attendanceRepository;
+    private final StudentRepository studentRepository;
 
     @Override
     public SessionResponseCreateDto createSessions(SessionCreateDto createDto, int frequency) {
@@ -83,6 +85,18 @@ public class SessionServiceImpl implements SessionService {
                 ()-> new ResourceNotFoundException("Session", "id", sessionId)
         );
         sessionRepository.delete(session);
+    }
+
+    @Override
+    public SessionResponseDto changeRep(Long sessionId, Long studentId) {
+        Student student = studentRepository.findById(studentId).orElseThrow(
+                ()-> new ResourceNotFoundException("Student", "id", studentId)
+        );
+        Session session= sessionRepository.findById(sessionId).orElseThrow(
+                ()-> new ResourceNotFoundException("Session", "id", sessionId)
+        );
+        session.setRepresentative_id(studentId);
+        return sessionMapper.entityToResponse(sessionRepository.save(session));
     }
 
     @Scheduled(fixedRate = 300000)

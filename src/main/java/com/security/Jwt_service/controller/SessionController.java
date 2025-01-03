@@ -38,4 +38,10 @@ public class SessionController {
     public ResponseEntity<List<SessionResponseDto>> updateSession(@RequestBody SessionUpdateDto dto){
         return new ResponseEntity<>(sessionService.updateSession(dto), HttpStatus.OK);
     }
+    @Operation(summary = "Change rep for a sessions", description = "API for change rep session")
+    @PutMapping("/{sessionId}/{studentId}")
+    public ResponseEntity<SessionResponseDto> updateSession(@PathVariable(name = "sessionId") Long sessionId,
+                                                                  @PathVariable(name = "studentId") Long studentId){
+        return new ResponseEntity<>(sessionService.changeRep(sessionId,studentId), HttpStatus.OK);
+    }
 }

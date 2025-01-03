@@ -11,4 +11,5 @@ public interface SessionService {
     SessionResponseCreateDto createSessions(SessionCreateDto createDto, int frequency);
     List<SessionResponseDto> updateSession(SessionUpdateDto updateDto);
     void deleteSession(Long sessionId);
+    SessionResponseDto changeRep(Long sessionId, Long studentId);
 }
