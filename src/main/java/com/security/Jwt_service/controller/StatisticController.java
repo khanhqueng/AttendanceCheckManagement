@@ -2,6 +2,7 @@ package com.security.Jwt_service.controller;
 import com.security.Jwt_service.config.security.CustomUserDetails;
 import com.security.Jwt_service.dto.response.classroom.ClassroomStudentIn;
 import com.security.Jwt_service.dto.response.statistic.StatisticForManager;
+import com.security.Jwt_service.dto.response.statistic.StatisticForTeacher;
 import com.security.Jwt_service.service.ClassroomService;
 import com.security.Jwt_service.service.StatisticService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,7 +25,7 @@ public class StatisticController {
     private final ClassroomService classroomService;
     @Operation(summary = "Get statistic for manager", description = "API for get statistic for manager")
     @GetMapping("/{timeDigit}")
-    public ResponseEntity<StatisticForManager> createSessions(@PathVariable(name = "timeDigit") String timeDigit){
+    public ResponseEntity<StatisticForManager> statisticForManager(@PathVariable(name = "timeDigit") String timeDigit){
         return new ResponseEntity<>(statisticService.statisticForManager(timeDigit), HttpStatus.OK);
     }
     @SecurityRequirement(name = "Authorization")
@@ -33,5 +34,10 @@ public class StatisticController {
     public ResponseEntity<List<ClassroomStudentIn>> getClassOfAStudent(Authentication authentication){
         Long userId= ((CustomUserDetails) authentication.getPrincipal()).getId();
         return new ResponseEntity<>(classroomService.getAllClassAndAttendancesForAStudent(userId), HttpStatus.OK);
+    }
+    @Operation(summary = "Get statistic attendances for a teacher", description = "API for get statistic attendance for a teacher")
+    @GetMapping("/teacher/{classroomId}")
+    public ResponseEntity<StatisticForTeacher> statisticForTeacher(@PathVariable(name = "classroomId") Long classroomId){
+        return new ResponseEntity<>(statisticService.statisticForTeacher(classroomId), HttpStatus.OK);
     }
 }

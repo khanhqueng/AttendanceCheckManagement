@@ -2,11 +2,15 @@ package com.security.Jwt_service.service.impl;
 
 import com.security.Jwt_service.dto.response.classroom.ClassroomWithMostAbsentStudent;
 import com.security.Jwt_service.dto.response.statistic.StatisticForManager;
+import com.security.Jwt_service.dto.response.statistic.StatisticForTeacher;
 import com.security.Jwt_service.entity.attendance.Attendance;
 import com.security.Jwt_service.entity.classroom.Classroom;
+import com.security.Jwt_service.entity.session.Session;
 import com.security.Jwt_service.exception.AppApiException;
+import com.security.Jwt_service.exception.ResourceNotFoundException;
 import com.security.Jwt_service.mapper.classroom.ClassroomMapper;
 import com.security.Jwt_service.repository.AttendanceRepository;
+import com.security.Jwt_service.repository.ClassroomRepository;
 import com.security.Jwt_service.service.StatisticService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,6 +27,7 @@ import java.util.*;
 public class StatisticServiceImpl implements StatisticService {
     private final AttendanceRepository attendanceRepository;
     private final ClassroomMapper classroomMapper;
+    private final ClassroomRepository classroomRepository;
     @Override
     public StatisticForManager statisticForManager(String timeDigit) {
         LocalDate today = LocalDate.of(2024,12,27);
@@ -107,6 +112,58 @@ public class StatisticServiceImpl implements StatisticService {
         throw new AppApiException(HttpStatus.BAD_REQUEST, "Time digit is invalid, time digit is one of Week, Month, Year");
 
     }
+
+    @Override
+    public StatisticForTeacher statisticForTeacher(Long classroomId) {
+        Classroom classroom= classroomRepository.findById(classroomId).orElseThrow(
+                ()-> new ResourceNotFoundException("Classroom", "id", classroomId)
+        );
+        int respondReceived =0;
+        double totalEfficient =0.0;
+        Integer late=0;
+        Integer absentWithPermission=0;
+        Integer absentWithoutPermission=0;
+        Integer onTime=0;
+        Integer wellUnderstand=0;
+        Integer normalUnderstand=0;
+        Integer notWellUnderStand=0;
+        Integer badUnderstand=0;
+        for(Session session : classroom.getSessions()){
+            Set<Attendance> attendances = session.getAttendances();
+            for(Attendance attendance: attendances){
+                if(attendance.getEfficientRate()!=null &&attendance.getUnderStandingRate()!=null){
+                    respondReceived++;
+                    totalEfficient+=attendance.getEfficientRate().doubleValue();
+
+                    if(attendance.getUnderStandingRate().doubleValue() >= 4.0 && attendance.getUnderStandingRate().doubleValue() <= 5.0)
+                        wellUnderstand++;
+                    else if(attendance.getUnderStandingRate().doubleValue() >= 2.5 && attendance.getUnderStandingRate().doubleValue() < 4.0)
+                        normalUnderstand++;
+                    else if(attendance.getUnderStandingRate().doubleValue() >= 1.5 && attendance.getUnderStandingRate().doubleValue() < 2.5)
+                        notWellUnderStand++;
+                    else
+                        badUnderstand++;
+                }
+                if(attendance.getStatus().equals("Vang ko phep")) absentWithoutPermission++;
+                else if(attendance.getStatus().equals("Vang co phep")) absentWithPermission++;
+                else if(attendance.getStatus().equals("Dung gio")) onTime++;
+                if(attendance.getStatus().startsWith("Di tre")) late++;
+            }
+        }
+        return StatisticForTeacher.builder()
+                .respondReceived(respondReceived)
+                .efficientOfLesson(totalEfficient/respondReceived)
+                .late(late)
+                .absentWithPermission(absentWithPermission)
+                .absentWithoutPermission(absentWithoutPermission)
+                .onTime(onTime)
+                .wellUnderstand(wellUnderstand)
+                .normalUnderstand(normalUnderstand)
+                .badUnderstand(badUnderstand)
+                .notWellUnderStand(notWellUnderStand)
+                .build();
+    }
+
     private Map<Classroom, Integer> aggregateAbsentStudent(List<Attendance> attendances){
         Map<Classroom, Integer> classWithAbsentStudent= new HashMap<>();
         for(Attendance attendance: attendances){
