@@ -13,11 +13,17 @@ import com.security.Jwt_service.mapper.course.CourseMapper;
 import com.security.Jwt_service.mapper.session.SessionMapper;
 import com.security.Jwt_service.mapper.student.StudentMapper;
 import com.security.Jwt_service.mapper.teacher.TeacherMapper;
+import com.security.Jwt_service.util.MapperUtils;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(uses = {TeacherMapper.class, StudentMapper.class, CourseMapper.class, SessionMapper.class})
+@Mapper(uses = {TeacherMapper.class, StudentMapper.class, CourseMapper.class, SessionMapper.class, MapperUtils.class})
 public interface ClassroomMapper extends GenericMapper<Classroom, ClassroomCreateDto, ClassroomResponseDto> {
+
+    @Override
+    @Mapping(target = "id", source = "entity.id")
+    @Mapping(target = "classMonitor", source = "entity.classRepId")
+    ClassroomResponseDto entityToResponse(Classroom entity);
 
     @Mapping(target = "id", source = "entity.id")
     ClassroomForRollCaller fromEntityToClassForRollCall(Classroom entity);
@@ -26,4 +32,5 @@ public interface ClassroomMapper extends GenericMapper<Classroom, ClassroomCreat
 
     @Mapping(target = "id", source = "entity.id")
     ClassroomStudentIn fromEntityToClassOfAStudentStudying(Classroom entity);
+
 }

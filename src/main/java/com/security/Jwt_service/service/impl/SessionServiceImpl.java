@@ -5,6 +5,7 @@ import com.security.Jwt_service.dto.request.session.SessionUpdateDto;
 import com.security.Jwt_service.dto.response.session.SessionResponseCreateDto;
 import com.security.Jwt_service.dto.response.session.SessionResponseDto;
 import com.security.Jwt_service.entity.attendance.Attendance;
+import com.security.Jwt_service.entity.classroom.Classroom;
 import com.security.Jwt_service.entity.session.Session;
 import com.security.Jwt_service.entity.user.Student;
 import com.security.Jwt_service.exception.ResourceDuplicateException;
@@ -42,19 +43,23 @@ public class SessionServiceImpl implements SessionService {
     public SessionResponseCreateDto createSessions(SessionCreateDto createDto, int frequency) {
         if(sessionRepository.existsByClassroomId(createDto.getClassRoomId()))
             throw new ResourceDuplicateException("Classroom", "id", createDto.getClassRoomId());
+        Classroom classroom = classroomRepository.findById(createDto.getClassRoomId()).orElseThrow(
+                ()-> new ResourceNotFoundException("Classroom", "id", createDto.getClassRoomId())
+        );
         SessionResponseCreateDto responseDto= new SessionResponseCreateDto();
         Set<SessionResponseDto> sessions = new HashSet<>();
         for(int i=1;i<= createDto.getNumberSessions(); i++){
             Session session= sessionMapper.requestToEntity(createDto);
             session.setStartTime(
                     session.getClassroom().getBeginDate().atTime(
-                    createDto.getOnClassTime().getHour(),
-                    createDto.getOnClassTime().getMinute()
+                            classroom.getStartTime().getHour(),
+                            classroom.getStartTime().getMinute()
             ).plusDays((long) (i - 1) * frequency));
+
             session.setEndTime(
                     session.getClassroom().getBeginDate().atTime(
-                            createDto.getEndClassTime().getHour(),
-                            createDto.getEndClassTime().getMinute()
+                            classroom.getEndTime().getHour(),
+                            classroom.getEndTime().getMinute()
                     ).plusDays((long) (i - 1) * frequency));
             session.setNo(i);
             session.setIsOver(0);

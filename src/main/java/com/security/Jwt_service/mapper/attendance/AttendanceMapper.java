@@ -14,4 +14,6 @@ public interface AttendanceMapper extends GenericMapper<Attendance, Attendance, 
     @Override
     @Mapping(target = "id", source = "entity.id")
     AttendanceResponseDto entityToResponse(Attendance entity);
+
+
 }

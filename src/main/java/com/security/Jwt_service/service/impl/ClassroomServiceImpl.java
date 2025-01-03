@@ -169,6 +169,28 @@ public class ClassroomServiceImpl implements ClassroomService {
         return student.getClassrooms().stream().map(classroomMapper::entityToResponse).toList();
     }
 
+    @Override
+    public ClassroomResponseDto updateClassroom(ClassroomCreateDto createDto, Long classroomId) {
+        Classroom classroom = classroomRepository.findById(classroomId).orElseThrow(
+                ()-> new ResourceNotFoundException("Classroom", "id", classroomId)
+        );
+        Teacher teacher= teacherRepository.findById(createDto.getTeacherId()).orElseThrow(
+                ()-> new ResourceNotFoundException("Teacher", "id", createDto.getTeacherId())
+        );
+        Course course= courseRepository.findById(createDto.getCourseId()).orElseThrow(
+                ()-> new ResourceNotFoundException("Course", "id", createDto.getTeacherId())
+        );
+        classroom.setName(createDto.getName());
+        classroom.setBeginDate(createDto.getBeginDate());
+        classroom.setEndDate(createDto.getEndDate());
+        classroom.setStartTime(createDto.getStartTime());
+        classroom.setEndTime(createDto.getEndTime());
+        classroom.setAllowedLateTime(createDto.getAllowedLateTime());
+        classroom.setTeacher(teacher);
+        classroom.setCourse(course);
+        return classroomMapper.entityToResponse(classroomRepository.save(classroom));
+    }
+
     private Set<Student> processExcelFile(MultipartFile excelFile) {
         List<String> studentCodes = new ArrayList<>();
         try{

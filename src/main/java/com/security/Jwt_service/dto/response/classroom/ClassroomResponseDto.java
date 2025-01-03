@@ -41,10 +41,21 @@ public class ClassroomResponseDto {
     private Integer allowedLateTime;
     private Integer allowedAbsent;
 
+    private ClassMonitor classMonitor;
+
     private CourseResponseDto course;
 
     private TeacherResponseDto teacher;
 
     private Set<StudentResponseDto> students;
     private Set<SessionResponseDto> sessions;
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ClassMonitor {
+        private String studentCode;
+        private String name;
+    }
 }

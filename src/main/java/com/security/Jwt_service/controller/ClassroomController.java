@@ -4,18 +4,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.security.Jwt_service.config.security.CustomUserDetails;
 import com.security.Jwt_service.dto.request.classroom.ClassroomCreateDto;
-import com.security.Jwt_service.dto.request.student.StudentCreateDto;
 import com.security.Jwt_service.dto.response.classroom.ClassroomForRollCaller;
 import com.security.Jwt_service.dto.response.classroom.ClassroomResponseDto;
-import com.security.Jwt_service.dto.response.classroom.ClassroomStudentIn;
-import com.security.Jwt_service.dto.response.course.CourseResponseDto;
-import com.security.Jwt_service.dto.response.student.StudentResponseDto;
-import com.security.Jwt_service.dto.response.user.UserResponseDto;
 import com.security.Jwt_service.service.ClassroomService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -50,6 +44,12 @@ public class ClassroomController {
                                                                 @RequestParam(name = "student-file") MultipartFile excelFile) throws JsonProcessingException {
         ClassroomCreateDto dto = objectMapper.readValue(classInfo, ClassroomCreateDto.class);
         return new ResponseEntity<>(classroomService.createClassroomWithStudentThroughExcel(dto, excelFile), HttpStatus.CREATED);
+    }
+    @Operation(summary = "Update classroom", description = "API for update classroom")
+    @PutMapping("/update/{classroomId}")
+    public ResponseEntity<ClassroomResponseDto> updateClassroom(@RequestBody ClassroomCreateDto updateDto,
+                                                                @PathVariable(name = "classroomId") Long classroomId)  {
+        return new ResponseEntity<>(classroomService.updateClassroom(updateDto,classroomId), HttpStatus.OK);
     }
 
     @Operation(summary = "Get all classrooms", description = "API for get all classrooms")
