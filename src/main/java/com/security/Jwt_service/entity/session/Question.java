@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -27,8 +29,9 @@ public class Question extends Base {
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime askedTime;
 
-    @Column(name = "parent_id")
-    private Long parentId;
+    @ManyToOne
+    @JoinColumn(name = "parent_id", referencedColumnName = "id")
+    private Question parentQuestion;
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
@@ -37,4 +40,7 @@ public class Question extends Base {
     @ManyToOne
     @JoinColumn(name = "session_id", referencedColumnName = "id", nullable = false)
     private Session session;
+
+    @OneToMany(mappedBy = "parentQuestion", cascade = CascadeType.ALL)
+    private List<Question> replies = new ArrayList<>();
 }

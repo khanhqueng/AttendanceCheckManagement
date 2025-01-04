@@ -1,5 +1,6 @@
 package com.security.Jwt_service.service.impl;
 
+import com.security.Jwt_service.dto.request.email.SendBatchDto;
 import com.security.Jwt_service.dto.request.email.StudentSenderDto;
 import com.security.Jwt_service.dto.response.attend.SearchHistoryResponseDto;
 import com.security.Jwt_service.entity.attendance.Attendance;
@@ -15,17 +16,21 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class EmailServiceImpl implements EmailService {
     @Autowired
     private JavaMailSender mailSender;
@@ -34,15 +39,16 @@ public class EmailServiceImpl implements EmailService {
     private final StudentRepository studentRepository;
     private final ClassroomRepository classroomRepository;
     @Override
-    public void sendAlertToMultipleStudent(Long classroomId, List<StudentSenderDto> dto) {
+    @Async
+    public void sendAlertToMultipleStudent(Long classroomId, SendBatchDto dto) {
         Classroom classroom= classroomRepository.findById(classroomId).orElseThrow(
                 ()-> new ResourceNotFoundException("Classroom", "id", classroomId)
         );
-        for(StudentSenderDto studentSenderDto: dto){
-            sendEmail(studentSenderDto, classroom);
+        for(StudentSenderDto studentSenderDto: dto.getStudentList()){
+            sendEmail(studentSenderDto, classroom, dto.getOpinion());
         }
     }
-    private void sendEmail(StudentSenderDto user, Classroom classroom) {
+    private void sendEmail(StudentSenderDto user, Classroom classroom, String opinion) {
         // Prepare the email content
         Student student = studentRepository.findByStudentCode(user.getStudentCode()).orElseThrow(
                 ()-> new ResourceNotFoundException("Student", "code", user.getStudentCode())
@@ -70,6 +76,7 @@ public class EmailServiceImpl implements EmailService {
         context.setVariable("numViolation", user.getNumberViolations());
         context.setVariable("allowedViolation", user.getMaximumViolationAllowed());
         context.setVariable("details", history);
+        context.setVariable("opinion", opinion);
 
         String htmlContent = templateEngine.process("email-template", context);
 
@@ -77,7 +84,7 @@ public class EmailServiceImpl implements EmailService {
         MimeMessage message = mailSender.createMimeMessage();
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
-            helper.setTo("22520648@gm.uit.edu.vn");
+            helper.setTo("khanhyop@yopmail.com");
             helper.setSubject("Attendance Alert");
             helper.setText(htmlContent, true);
             mailSender.send(message);

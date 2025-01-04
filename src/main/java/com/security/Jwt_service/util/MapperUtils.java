@@ -5,6 +5,7 @@ import com.security.Jwt_service.dto.response.session.SessionResponseDto;
 import com.security.Jwt_service.entity.classroom.Classroom;
 import com.security.Jwt_service.entity.session.Session;
 import com.security.Jwt_service.entity.user.Student;
+import com.security.Jwt_service.entity.user.User;
 import com.security.Jwt_service.exception.ResourceNotFoundException;
 import com.security.Jwt_service.repository.ClassroomRepository;
 import com.security.Jwt_service.repository.SessionRepository;
@@ -40,6 +41,10 @@ public abstract class MapperUtils {
                 ()-> new ResourceNotFoundException("Student", "id", id)
         );
         return new  SessionResponseDto.SessionMonitor(student.getStudentCode(), student.getName());
+    }
+    public String mapFromEntityToString(User user){
+        if(user ==null) return null;
+        return user.getUsername();
     }
 
 }

@@ -1,5 +1,6 @@
 package com.security.Jwt_service.controller;
 
+import com.security.Jwt_service.dto.request.email.SendBatchDto;
 import com.security.Jwt_service.dto.request.email.StudentSenderDto;
 import com.security.Jwt_service.dto.request.session.SessionCreateDto;
 import com.security.Jwt_service.dto.response.session.SessionResponseCreateDto;
@@ -21,7 +22,7 @@ public class EmailController {
     private final EmailService emailService;
     @Operation(summary = "Send email to selected student", description = "API for send email to selected student")
     @PostMapping("/{classroomId}")
-    public ResponseEntity<String> sendBatchStudent(@RequestBody List<StudentSenderDto> dto, @PathVariable(name = "classroomId") Long classroomId){
+    public ResponseEntity<String> sendBatchStudent(@RequestBody SendBatchDto dto, @PathVariable(name = "classroomId") Long classroomId){
         emailService.sendAlertToMultipleStudent(classroomId,dto);
         return new ResponseEntity<>("Sent success", HttpStatus.OK);
     }
