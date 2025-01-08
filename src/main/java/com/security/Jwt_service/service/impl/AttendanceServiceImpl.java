@@ -67,7 +67,7 @@ public class AttendanceServiceImpl implements AttendanceService {
         Session session = sessionRepository.findById(sessionId).orElseThrow(
                 ()-> new ResourceNotFoundException("Session", "id", sessionId)
         );
-        Student student = studentRepository.findByUserId(userId).orElseThrow(
+        Student student = studentRepository.findById(userId).orElseThrow(
                 ()-> new ResourceNotFoundException("Student", "id", userId)
         );
         if(attendanceRepository.existsByStudentIdAndSessionId(student.getId(), session.getId()))
