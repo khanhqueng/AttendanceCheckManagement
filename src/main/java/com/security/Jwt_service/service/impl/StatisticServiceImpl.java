@@ -30,7 +30,7 @@ public class StatisticServiceImpl implements StatisticService {
     private final ClassroomRepository classroomRepository;
     @Override
     public StatisticForManager statisticForManager(String timeDigit) {
-        LocalDate today = LocalDate.of(2024,12,27);
+        LocalDate today = LocalDate.now();
         int absentWithPermission= 0;
         int lateForClass= 0;
         int absentWithoutPermission= 0;
