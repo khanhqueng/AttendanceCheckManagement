@@ -39,8 +39,6 @@ public class AttendanceServiceImpl implements AttendanceService {
         Student student = studentRepository.findByUserId(userId).orElseThrow(
                 ()-> new ResourceNotFoundException("Student", "id", userId)
         );
-        if(attendanceRepository.existsByStudentIdAndSessionId(student.getId(), session.getId()))
-            throw new AppApiException(HttpStatus.BAD_REQUEST, "You have attended this session");
         Attendance attendance= new Attendance();
         attendance.setStudent(student);
         attendance.setSession(session);
