@@ -32,7 +32,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     private final AttendanceRepository attendanceRepository;
     private final AttendanceMapper attendanceMapper;
     @Override
-    public AttendanceResponseDto attendStudent(Long sessionId, Long userId) {
+    public AttendanceResponseDto attendStudent(Long sessionId, Long userId, LocalTime startTime, LocalTime endTime) {
         Session session = sessionRepository.findById(sessionId).orElseThrow(
                 ()-> new ResourceNotFoundException("Session", "id", sessionId)
         );
@@ -45,21 +45,21 @@ public class AttendanceServiceImpl implements AttendanceService {
         attendance.setStudent(student);
         attendance.setSession(session);
         // get on-class time of the class
-        LocalTime onClassTime= session.getStartTime().toLocalTime();
         // get current time according to Viet nam timeline
         ZoneId zoneId = ZoneId.of("Asia/Ho_Chi_Minh");
         attendance.setOnClassTime(LocalDateTime.now(zoneId));
         LocalTime now = LocalDateTime.now(zoneId).toLocalTime();
         // check late or on time
-        if(onClassTime.isAfter(now)){
+        if(now.isAfter(startTime) && now.isBefore(endTime)){
             attendance.setStatus("Dung gio");
             return attendanceMapper.entityToResponse(attendanceRepository.save(attendance));
         }
-        else{
-            Duration duration= Duration.between(onClassTime,now);
+        else if (now.isAfter(endTime)){
+            Duration duration= Duration.between(endTime,now);
             attendance.setStatus(String.format("Di tre %s phut", duration.toMinutes()));
             return attendanceMapper.entityToResponse(attendanceRepository.save(attendance));
         }
+        return null;
     }
 
     @Override

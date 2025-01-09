@@ -1,6 +1,7 @@
 package com.security.Jwt_service.controller;
 
 import com.security.Jwt_service.config.security.CustomUserDetails;
+import com.security.Jwt_service.dto.request.attendance.TimeRangeDto;
 import com.security.Jwt_service.dto.request.course.CourseCreateDto;
 import com.security.Jwt_service.dto.request.survey.SurveyRequestDto;
 import com.security.Jwt_service.dto.response.attend.AttendanceResponseDto;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalTime;
 import java.util.List;
 
 @RestController
@@ -29,9 +31,10 @@ public class AttendanceController {
     @SecurityRequirement(name = "Authorization")
     @Operation(summary = "Add attendance ( Only authenticated student) ", description = "API for add new attendance")
     @PostMapping("/{session_id}")
-    public ResponseEntity<AttendanceResponseDto> createAttendance(Authentication authentication, @PathVariable(name = "session_id") Long id){
+    public ResponseEntity<AttendanceResponseDto> createAttendance(Authentication authentication, @PathVariable(name = "session_id") Long id,
+                                                                  @RequestBody TimeRangeDto dto){
         Long userId= ((CustomUserDetails) authentication.getPrincipal()).getId();
-        return new ResponseEntity<>(attendanceService.attendStudent(id,userId), HttpStatus.CREATED);
+        return new ResponseEntity<>(attendanceService.attendStudent(id,userId, dto.getStartTime(), dto.getEndTime()), HttpStatus.CREATED);
     }
 
     @Operation(summary = "Update absent student", description = "API for update absent student")
