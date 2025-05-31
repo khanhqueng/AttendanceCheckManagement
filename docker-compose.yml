@@ -7,17 +7,51 @@ services:
     image: quangkhanh288/attendance-server
     restart: unless-stopped
     environment:
-      DB_HOST:
-      DB_PORT:
-      DB_USER:
-      DB_PASS:
-      MAIL_USERNAME:
-      MAIL_PASSWORD:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: quangkhanh
+      DB_PASS: 2882004
+      MAIL_USERNAME: khanhquang2882004@gmail.com
+      MAIL_PASSWORD: 2882004
       SPRING_PROFILES_ACTIVE: prod
     ports:
       - 8000:8000
     networks:
       - attendance-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./certbot/www:/var/www/certbot
+      - ./certbot/conf:/etc/letsencrypt
+    ports:
+      - '80:80'
+      - '443:443'
+    depends_on:
+      - codebase
+
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - ./certbot/www:/var/www/certbot
+      - ./certbot/conf:/etc/letsencrypt
+    entrypoint: >
+      sh -c "certbot certonly --webroot --webroot-path=/var/www/certbot
+             --email 22520674@gm.uit.edu.vn --agree-tos --no-eff-email
+             -d api.attendance.kwork.live"
+
+  certbot-renew:
+    image: certbot/certbot
+    container_name: certbot-renew
+    volumes:
+      - ./certbot/www:/var/www/certbot
+      - ./certbot/conf:/etc/letsencrypt
+    entrypoint: >
+      sh -c "while :; do certbot renew --webroot --webroot-path=/var/www/certbot && docker exec nginx nginx -s reload; sleep 12h; done"
+
   mysql:
     image: mysql:5.7.40
     container_name: mysql
@@ -32,6 +66,7 @@ services:
       - ./mysql/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
     networks:
       - attendance-network
+
   redis:
     container_name: redis
     image: redis
@@ -39,6 +74,7 @@ services:
       - '6379:6379'
     networks:
       - attendance-network
+
 networks:
   attendance-network:
-    external: true
+    driver: bridge
