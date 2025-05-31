@@ -2,7 +2,24 @@ version: '3.8'
 name: attendance
 
 services:
-  codebase:
+  codebase-1:
+    container_name: attendance
+    image: quangkhanh288/attendance-server
+    restart: unless-stopped
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: quangkhanh
+      DB_PASS: 2882004
+      MAIL_USERNAME: khanhquang2882004@gmail.com
+      MAIL_PASSWORD: 2882004
+      SPRING_PROFILES_ACTIVE: prod
+    ports:
+      - 8000:8000
+    networks:
+      - attendance-network
+
+  codebase-2:
     container_name: attendance
     image: quangkhanh288/attendance-server
     restart: unless-stopped
@@ -30,7 +47,8 @@ services:
       - '80:80'
       - '443:443'
     depends_on:
-      - codebase
+      - codebase-1
+      - codebase-2
 
   certbot:
     image: certbot/certbot
