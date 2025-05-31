@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  e2e-tests:
+    build:
+      context: .
+      dockerfile: e2e.Dockerfile
+    environment:
+      DB_HOST:
+      DB_PORT:
+      DB_USER:
+      DB_PASS:
+      MAIL_USERNAME:
+      MAIL_PASSWORD:
+    command: mvn clean verify -Dspring.profiles.active=test

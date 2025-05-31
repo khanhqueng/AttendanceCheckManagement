@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Clock;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -31,6 +32,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     private final StudentRepository studentRepository;
     private final AttendanceRepository attendanceRepository;
     private final AttendanceMapper attendanceMapper;
+    private final Clock clock;
     @Override
     public AttendanceResponseDto attendStudent(Long sessionId, Long userId, LocalTime startTime, LocalTime endTime) {
         Session session = sessionRepository.findById(sessionId).orElseThrow(
@@ -45,8 +47,8 @@ public class AttendanceServiceImpl implements AttendanceService {
         // get on-class time of the class
         // get current time according to Viet nam timeline
         ZoneId zoneId = ZoneId.of("Asia/Ho_Chi_Minh");
-        attendance.setOnClassTime(LocalDateTime.now(zoneId));
-        LocalTime now = LocalDateTime.now(zoneId).toLocalTime();
+        attendance.setOnClassTime(LocalDateTime.now(clock.withZone(zoneId)));
+        LocalTime now = LocalDateTime.now(clock.withZone(zoneId)).toLocalTime();
         // check late or on time
         if(now.isAfter(startTime) && now.isBefore(endTime)){
             attendance.setStatus("Dung gio");

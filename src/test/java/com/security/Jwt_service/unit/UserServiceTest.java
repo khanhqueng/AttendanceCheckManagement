@@ -1,4 +1,4 @@
-package com.security.Jwt_service.service;
+package com.security.Jwt_service.unit;
 
 import com.security.Jwt_service.dto.request.user.UserCreateDto;
 import com.security.Jwt_service.exception.AppApiException;
@@ -19,11 +19,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@ActiveProfiles("test")
 public class UserServiceTest {
     @Mock
     private StudentRepository studentRepository;

@@ -15,7 +15,7 @@ import java.util.Set;
 @AllArgsConstructor
 
 @Entity
-@Table(name = "user")
+@Table(name = "app_user")
 @Builder
 public class User extends Base {
     @Column(name = "username", unique = true, nullable = false)
