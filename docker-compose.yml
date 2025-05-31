@@ -3,7 +3,7 @@ name: attendance
 
 services:
   codebase-1:
-    container_name: attendance
+    container_name: attendance-1
     image: quangkhanh288/attendance-server
     restart: unless-stopped
     environment:
@@ -20,7 +20,7 @@ services:
       - attendance-network
 
   codebase-2:
-    container_name: attendance
+    container_name: attendance-2
     image: quangkhanh288/attendance-server
     restart: unless-stopped
     environment:
