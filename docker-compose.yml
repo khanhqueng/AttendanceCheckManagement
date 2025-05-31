@@ -39,9 +39,9 @@ services:
       - ./certbot/www:/var/www/certbot
       - ./certbot/conf:/etc/letsencrypt
     entrypoint: >
-      sh -c "certbot certonly --webroot --webroot-path=/var/www/certbot
-             --email 22520674@gm.uit.edu.vn --agree-tos --no-eff-email
-             -d api.attendance.kwork.live"
+      sh -c "certbot certonly --webroot --webroot-path=/var/www/certbot \
+      --email 22520674@gm.uit.edu.vn --agree-tos --no-eff-email \
+      -d api.attendance.kwork.live"
 
   certbot-renew:
     image: certbot/certbot
