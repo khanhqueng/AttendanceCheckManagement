@@ -52,6 +52,8 @@ services:
     ports:
       - '80:80'
       - '443:443'
+    networks:
+      - attendance-network
     depends_on:
       - codebase-1
       - codebase-2
