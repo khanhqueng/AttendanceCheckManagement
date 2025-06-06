@@ -35,7 +35,7 @@ services:
       MAIL_PASSWORD: 2882004
       SPRING_PROFILES_ACTIVE: prod
     ports:
-      - 8001:8001
+      - 8001:8000
     depends_on:
       - mysql
       - redis
