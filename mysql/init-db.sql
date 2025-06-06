@@ -1,1 +1,4 @@
-CREATE DATABASE attendance_db;
+CREATE DATABASE IF NOT EXISTS attendance_db;
+CREATE USER IF NOT EXISTS 'quangkhanh'@'%' IDENTIFIED BY '2882004';
+GRANT ALL PRIVILEGES ON attendance_db.* TO 'quangkhanh'@'%';
+FLUSH PRIVILEGES;
