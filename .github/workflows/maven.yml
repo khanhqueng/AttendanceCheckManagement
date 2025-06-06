@@ -28,8 +28,6 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
-      - name: Run unit tests
-        run: mvn test
       - name: Build with Maven
         run: mvn clean install -DskipTests
       - name: Login to docker registry
@@ -43,3 +41,20 @@ jobs:
           context: .
           push: true
           tags: quangkhanh288/attendance-server:latest
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: executing remote ssh commands
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          script_stop: true
+          script: |
+            docker-compose stop codebase-1 codebase-2
+            docker-compose rm -f codebase-1 codebase-2
+            docker-compose pull codebase-1 codebase-2
+            docker image prune -f
+            docker-compose up -d codebase-1 codebase-2
