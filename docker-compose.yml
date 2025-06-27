@@ -98,7 +98,8 @@ services:
     entrypoint: >
       sh -c "certbot certonly --webroot --webroot-path=/var/www/certbot \
       --email 22520674@gm.uit.edu.vn --agree-tos --no-eff-email \
-      -d api.attendance.kwork.live"
+      -d api.attendance.kwork.live \
+      -d grafana.attendance.kwork.live"
 
   certbot-renew:
     image: certbot/certbot
