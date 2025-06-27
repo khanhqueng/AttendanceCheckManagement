@@ -96,6 +96,7 @@ services:
       - '3306:3306'
     volumes:
       - ./mysql/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+      - ./mysql/mysql.cnf:/etc/mysql/conf.d/my.cnf
     networks:
       - attendance-network
 
